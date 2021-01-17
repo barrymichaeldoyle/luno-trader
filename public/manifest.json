@@ -1,0 +1,9 @@
+{
+  "short_name": "Luno Trader",
+  "name": "Luno Trader",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#12326b"
+}
