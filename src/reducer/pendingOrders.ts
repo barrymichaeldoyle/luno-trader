@@ -1,8 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Authorization, Order } from '../utils'
-
-const { REACT_APP_PROXY_URL } = process.env
+import { Authorization, Order, proxyUrl } from '../utils'
 
 export const slice = createSlice({
   name: 'pendingOrders',
@@ -37,7 +35,7 @@ export const fetchPendingOrders = () => async dispatch => {
   dispatch(setStatus('LOADING'))
   try {
     const res = await fetch(
-      `${REACT_APP_PROXY_URL}https://api.luno.com/api/1/listorders?state=PENDING`,
+      `${proxyUrl}https://api.luno.com/api/1/listorders?state=PENDING`,
       { method: 'GET', headers: { Authorization } }
     )
     const json = await res.json()

@@ -11,18 +11,18 @@ export interface Balance {
 
 export interface Order {
   base: string
-  completed_timestamp: string
+  completed_timestamp: number
   counter: string
-  creation_timestamp: string
-  expiration_timestamp: string
+  creation_timestamp: number
+  expiration_timestamp: number
   fee_base: string
   fee_counter: string
   limit_price: string
   limit_volume: string
   order_id: string
   pair: string
-  state: 'PENDING'
-  type: 'ASK' | 'BID'
+  state: 'PENDING' | 'COMPLETE'
+  type: 'ASK' | 'BID' | 'BUY' | 'SELL'
 }
 
 export type STATUS = 'IDLE' | 'LOADING' | 'SUCCEEDED' | 'FAILED'

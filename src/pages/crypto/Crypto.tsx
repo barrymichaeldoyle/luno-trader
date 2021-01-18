@@ -3,10 +3,13 @@ import { useDispatch } from 'react-redux'
 
 import { Button, Container } from '../../components'
 import { fetchBalances } from '../../reducer/balances'
+import { fetchCompleteOrders } from '../../reducer/completeOrders'
 import { fetchPendingOrders } from '../../reducer/pendingOrders'
 import BackButton from './BackButton'
+import CompleteOrders from './completed-orders'
 import Heading from './Heading'
-import PendingOrders from './PendingOrders'
+import PendingOrders from './pending-orders'
+import TradeButtons from './trade-buttons'
 import ValueRecord from './ValueRecord'
 
 const Crypto: FC = () => {
@@ -14,6 +17,7 @@ const Crypto: FC = () => {
 
   const refresh = useCallback(() => {
     dispatch(fetchPendingOrders())
+    dispatch(fetchCompleteOrders())
     dispatch(fetchBalances())
   }, [dispatch])
 
@@ -31,10 +35,14 @@ const Crypto: FC = () => {
       <PendingOrders />
 
       <h3>Recent Orders</h3>
-      <h4>Work In Progress</h4>
+      <CompleteOrders />
 
-      <Button onClick={refresh}>Refresh</Button>
-      <BackButton />
+      <TradeButtons refresh={refresh} />
+
+      <div>
+        <BackButton />
+        <Button onClick={refresh}>Refresh</Button>
+      </div>
     </Container>
   )
 }

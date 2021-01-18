@@ -13,16 +13,13 @@ const WalletTable = styled(Table)`
     &:last-child {
       font-weight: bold;
     }
-
     & > div {
       &:nth-child(1) {
         width: 120px;
       }
-
       &:nth-child(2) {
         width: 80px;
       }
-
       &:nth-child(3) {
         text-align: right;
         width: 120px;
@@ -58,7 +55,7 @@ const Wallets: FC = () => {
             <div>
               <div>Currency</div>
               <div>Units</div>
-              <div>Rand Value</div>
+              <div>Value</div>
               <div></div>
             </div>
             {Object.keys(assets).map(

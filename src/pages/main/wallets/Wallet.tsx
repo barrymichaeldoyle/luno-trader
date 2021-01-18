@@ -51,6 +51,11 @@ const Wallet: FC<Props> = ({ asset }) => {
     [tickers]
   )
 
+  const viewAsset = useCallback(() => dispatch(selectAsset(asset)), [
+    dispatch,
+    asset
+  ])
+
   return (
     <div key={account_id}>
       <div>{assetLabel(asset as ASSET)}</div>
@@ -60,9 +65,7 @@ const Wallet: FC<Props> = ({ asset }) => {
       <div>R {calculateZarValue(asset as ASSET, balance)}</div>
       <div>
         {showView(account_id) && (
-          <LinkButton onClick={() => dispatch(selectAsset(asset))}>
-            View
-          </LinkButton>
+          <LinkButton onClick={viewAsset}>View</LinkButton>
         )}
       </div>
     </div>

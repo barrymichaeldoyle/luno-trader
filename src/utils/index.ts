@@ -3,9 +3,11 @@ import { ASSET, TickerPair } from './interfaces'
 const {
   REACT_APP_API_KEY,
   REACT_APP_API_SECRET,
+  REACT_APP_PROXY_URL,
   REACT_APP_SAVINGS_ID
 } = process.env
 
+export const proxyUrl = REACT_APP_PROXY_URL
 export const savingsId = REACT_APP_SAVINGS_ID
 
 export const assetLabel = (asset: ASSET): string => {

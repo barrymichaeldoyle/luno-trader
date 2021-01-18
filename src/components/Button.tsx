@@ -12,7 +12,7 @@ export const Container = styled.button<{ outline?: number }>`
     font-weight: bold;
     height: 48px;
     letter-spacing: 1.5px;
-    margin: 10px auto;
+    margin: 10px;
     padding: 0 20px;
     transition: ${theme.transition};
 

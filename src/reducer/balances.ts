@@ -1,8 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ASSET, Authorization, Balance, Wallets } from '../utils'
-
-const { REACT_APP_PROXY_URL, REACT_APP_SAVINGS_ID } = process.env
+import { ASSET, Authorization, Balance, proxyUrl, savingsId, Wallets } from '../utils'
 
 export const slice = createSlice({
   name: 'balances',
@@ -28,15 +26,14 @@ export const { setBalances, setStatus, setError } = slice.actions
 export const fetchBalances = () => async dispatch => {
   dispatch(setStatus('LOADING'))
   try {
-    const res = await fetch(
-      `${REACT_APP_PROXY_URL}https://api.luno.com/api/1/balance`,
-      { method: 'GET', headers: { Authorization } }
-    )
+    const res = await fetch(`${proxyUrl}https://api.luno.com/api/1/balance`, {
+      method: 'GET',
+      headers: { Authorization }
+    })
     const json = await res.json()
     const balances: Wallets = {}
     json.balance.forEach((balance: Balance) => {
-      if (balance.account_id === REACT_APP_SAVINGS_ID)
-        balances.SAVINGS = balance
+      if (balance.account_id === savingsId) balances.SAVINGS = balance
       else balances[balance.asset] = balance
     })
     dispatch(setBalances(balances))

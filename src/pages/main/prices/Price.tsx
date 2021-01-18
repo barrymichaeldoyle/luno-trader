@@ -1,7 +1,8 @@
-import React, { FC, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import React, { FC, useCallback, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { ColorDiv } from '../../../components'
+import { ColorDiv, LinkButton } from '../../../components'
+import { selectAsset } from '../../../reducer/selectedAsset'
 import { format, pairLabel, TickerPair } from '../../../utils'
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const Price: FC<Props> = ({ pair }) => {
+  const dispatch = useDispatch()
   const pairOrders = useSelector<any, any>(
     state => state.pendingOrders.orders[pair] ?? []
   )
@@ -35,6 +37,11 @@ const Price: FC<Props> = ({ pair }) => {
     return result
   }, [pairOrders, tickerPair])
 
+  const viewAsset = useCallback(
+    () => dispatch(selectAsset(pair.substring(0, 3))),
+    [dispatch, pair]
+  )
+
   return (
     <div>
       <div>{pairLabel(pair as TickerPair)}</div>
@@ -48,6 +55,9 @@ const Price: FC<Props> = ({ pair }) => {
       >
         {nearestOpenOrderPrice ? format(nearestOpenOrderPrice) : ''}
       </ColorDiv>
+      <div>
+        <LinkButton onClick={viewAsset}>View</LinkButton>
+      </div>
     </div>
   )
 }

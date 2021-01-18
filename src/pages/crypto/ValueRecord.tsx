@@ -52,8 +52,8 @@ const ValueRecord: FC = () => {
         <div>Value</div>
       </div>
       <div>
-        <div>{Number(bid)}</div>
-        <div>{Number(ask)}</div>
+        <div>R {format(bid)}</div>
+        <div>R {format(ask)}</div>
         <div>{Number(balance)}</div>
         <div>R {zarValue}</div>
         <div></div>

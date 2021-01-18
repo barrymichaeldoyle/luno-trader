@@ -13,15 +13,17 @@ const PriceTable = styled(Table)`
     &:nth-child(1) {
       width: 90px;
     }
-
     &:nth-child(2) {
       text-align: right;
       width: 130px;
     }
-
     &:nth-child(3) {
       text-align: right;
       width: 130px;
+    }
+    &:nth-child(4) {
+      text-align: right;
+      width: 50px;
     }
   }
 `
@@ -47,8 +49,9 @@ const Prices: FC = () => {
             <PriceTable>
               <div>
                 <div>Currency</div>
-                <div>Rand Price</div>
+                <div>Price</div>
                 <div>Open Order</div>
+                <div></div>
               </div>
               {Object.keys(tickers).map(pair => (
                 <Price key={pair} pair={pair as TickerPair} />
