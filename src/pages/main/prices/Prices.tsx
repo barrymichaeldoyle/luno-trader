@@ -33,7 +33,7 @@ const Prices: FC = () => {
   const fetch = useCallback(() => dispatch(fetchPendingOrders()), [dispatch])
 
   useEffect(() => {
-    dispatch(fetchPendingOrders())
+    fetch()
   }, [fetch])
 
   return (
@@ -55,7 +55,7 @@ const Prices: FC = () => {
               ))}
             </PriceTable>
             <Button onClick={fetch} outline>
-              Refresh
+              Refresh{status === 'LOADING' ? 'ing' : ''}
             </Button>
           </>
         )}

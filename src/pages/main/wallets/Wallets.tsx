@@ -50,9 +50,7 @@ const Wallets: FC = () => {
   return (
     <Container>
       <h2>Wallets</h2>
-      {status === 'LOADING' ? (
-        <p>Fetching...</p>
-      ) : status === 'ERROR' ? (
+      {status === 'ERROR' ? (
         <p>{error}</p>
       ) : (
         <>
@@ -70,7 +68,7 @@ const Wallets: FC = () => {
             <Total />
           </WalletTable>
           <Button onClick={fetch} outline>
-            Refresh
+            Refresh{status === 'LOADING' ? 'ing' : ''}
           </Button>
         </>
       )}
