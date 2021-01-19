@@ -2,10 +2,12 @@
   "name": "luno-trader",
   "version": "0.1.0",
   "homepage": "./",
-  "main": "./electron/main.js",
-  "private": true,
+  "main": "./main.js",
+  "productName": "Luno Trader",
+  "private": false,
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.0",
+    "electron-is-dev": "^1.2.0",
     "moment": "^2.29.1",
     "path": "^0.12.7",
     "react": "^17.0.1",
@@ -31,7 +33,6 @@
     "cra-template-typescript": "1.1.1",
     "electron": "^11.2.0",
     "electron-builder": "^22.9.1",
-    "electron-is-dev": "^1.2.0",
     "electron-packager": "^15.2.0",
     "eslint": "^7.18.0",
     "prettier": "^2.2.1",
@@ -44,9 +45,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "ebuild": "npm run build && node_modules/.bin/build",
-    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
-    "deploy-mac": "electron-packager . LunoTrader "
+    "deploy": "electron-packager . --overwrite",
+    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "browserslist": {
     "production": [

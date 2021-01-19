@@ -5,7 +5,7 @@ import { ASSET, format } from '../../../utils'
 
 const Total: FC = () => {
   const tickers = useSelector(state => state.tickers.tickers)
-  const assets = useSelector(state => state.balances.assets)
+  const assets = useSelector(state => state.wallets.assets)
 
   const totalZarValue = useMemo(() => {
     let zarSum = 0

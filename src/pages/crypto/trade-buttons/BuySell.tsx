@@ -24,7 +24,7 @@ const BuySell: FC<Props> = ({
 }) => {
   const [isTrading, setIsTrading] = useState(false)
   const ask = useSelector(state => state.tickers.tickers[pair]?.ask)
-  const assets = useSelector(state => state.balances.assets)
+  const assets = useSelector(state => state.wallets.assets)
 
   if (!ask) return null
 

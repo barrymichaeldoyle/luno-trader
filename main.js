@@ -8,11 +8,11 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    show: false,
+    show: false
   })
   const startURL = isDev
     ? 'http://localhost:3000'
-    : `file://${path.join(__dirname, '../build/index.html')}`
+    : `file://${path.join(__dirname, './build/index.html')}`
 
   mainWindow.loadURL(startURL)
 

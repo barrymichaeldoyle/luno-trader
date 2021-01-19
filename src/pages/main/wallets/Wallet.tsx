@@ -15,7 +15,7 @@ const showView = (account_id: string) => account_id !== REACT_APP_SAVINGS_ID
 const Wallet: FC<Props> = ({ asset }) => {
   const dispatch = useDispatch()
   const tickers = useSelector(state => state.tickers.tickers)
-  const wallet = useSelector(state => state.balances.assets[asset])
+  const wallet = useSelector(state => state.wallets.assets[asset])
 
   const calculateZarValue = useCallback(
     (asset: ASSET, balance: string) => {

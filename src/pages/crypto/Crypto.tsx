@@ -2,9 +2,9 @@ import React, { FC, useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Button, Container } from '../../components'
-import { fetchBalances } from '../../reducer/balances'
 import { fetchCompleteOrders } from '../../reducer/completeOrders'
 import { fetchPendingOrders } from '../../reducer/pendingOrders'
+import { fetchWallets } from '../../reducer/wallets'
 import BackButton from './BackButton'
 import CompleteOrders from './completed-orders'
 import Heading from './Heading'
@@ -18,7 +18,7 @@ const Crypto: FC = () => {
   const refresh = useCallback(() => {
     dispatch(fetchPendingOrders())
     dispatch(fetchCompleteOrders())
-    dispatch(fetchBalances())
+    dispatch(fetchWallets())
   }, [dispatch])
 
   useEffect(() => {

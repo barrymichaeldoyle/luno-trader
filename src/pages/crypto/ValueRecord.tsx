@@ -34,32 +34,49 @@ const ValueRecord: FC = () => {
     state => state.tickers.tickers[`${state.selected.asset}ZAR`]
   )
   const asset = useSelector(state => state.selected.asset)
-  const balance = useSelector(state =>
-    asset ? state.balances.assets[asset]?.balance ?? '' : ''
+  const wallet = useSelector(state => asset && state.wallets.assets[asset])
+
+  const available = useMemo(
+    () =>
+      wallet
+        ? Number((Number(wallet.balance) - Number(wallet.reserved)).toFixed(6))
+        : 0,
+    [wallet]
   )
 
   const zarValue = useMemo(() => {
-    if (balance.length > 0)
-      return format((Number(balance) * Number(bid)).toString())
+    if (wallet) return format((Number(wallet.balance) * Number(bid)).toString())
     return '-'
-  }, [balance, bid])
+  }, [wallet, bid])
+
+  if (!wallet) return null
 
   return (
-    <ValueTable>
-      <div>
-        <div>Bid</div>
-        <div>Ask</div>
-        <div>Owned</div>
-        <div>Value</div>
-      </div>
-      <div>
-        <div>R {format(bid)}</div>
-        <div>R {format(ask)}</div>
-        <div>{Number(balance)}</div>
-        <div>R {zarValue}</div>
-        <div></div>
-      </div>
-    </ValueTable>
+    <>
+      <ValueTable>
+        <div>
+          <div>Bid</div>
+          <div>Ask</div>
+          <div>Owned</div>
+          <div>Value</div>
+        </div>
+        <div>
+          <div>R {format(bid)}</div>
+          <div>R {format(ask)}</div>
+          <div>{Number(wallet.balance)}</div>
+          <div>R {zarValue}</div>
+          <div></div>
+        </div>
+      </ValueTable>
+      <ValueTable>
+        <div>
+          <div>Available</div>
+        </div>
+        <div>
+          <div>{available}</div>
+        </div>
+      </ValueTable>
+    </>
   )
 }
 

@@ -1,6 +1,6 @@
 export type ASSET = 'ZAR' | 'ETH' | 'XBT' | 'XRP' | 'LTC' | 'SAVINGS'
 
-export interface Balance {
+export interface Wallet {
   account_id: string
   asset: string
   balance: string
@@ -54,10 +54,10 @@ export interface Orders {
 }
 
 export interface Wallets {
-  XBT?: Balance
-  ETH?: Balance
-  LTC?: Balance
-  XRP?: Balance
-  SAVINGS?: Balance
-  ZAR?: Balance
+  XBT?: Wallet
+  ETH?: Wallet
+  LTC?: Wallet
+  XRP?: Wallet
+  SAVINGS?: Wallet
+  ZAR?: Wallet
 }

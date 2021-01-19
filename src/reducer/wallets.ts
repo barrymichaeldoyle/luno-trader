@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Authorization, Balance, proxyUrl, savingsId, STATUS, Wallets } from '../utils'
+import { Authorization, proxyUrl, savingsId, STATUS, Wallet, Wallets } from '../utils'
 
 interface State {
   assets: Wallets
@@ -14,27 +14,27 @@ const initialState: State = {
 }
 
 export const slice = createSlice({
-  name: 'balances',
+  name: 'wallets',
   initialState,
   reducers: {
-    setBalances: (state, { payload }) => ({
-      ...state,
-      assets: payload,
-      error: undefined,
-      status: 'SUCCEEDED'
-    }),
     setError: (state, { payload }) => ({
       ...state,
       error: payload,
       status: 'FAILED'
     }),
-    setStatus: (state, { payload }) => ({ ...state, status: payload })
+    setStatus: (state, { payload }) => ({ ...state, status: payload }),
+    setWallets: (state, { payload }) => ({
+      ...state,
+      assets: payload,
+      error: undefined,
+      status: 'SUCCEEDED'
+    })
   }
 })
 
-export const { setBalances, setStatus, setError } = slice.actions
+export const { setWallets, setStatus, setError } = slice.actions
 
-export const fetchBalances = () => async dispatch => {
+export const fetchWallets = () => async dispatch => {
   dispatch(setStatus('LOADING'))
   try {
     const res = await fetch(`${proxyUrl}https://api.luno.com/api/1/balance`, {
@@ -42,12 +42,12 @@ export const fetchBalances = () => async dispatch => {
       headers: { Authorization }
     })
     const json = await res.json()
-    const balances: Wallets = {}
-    json.balance.forEach((balance: Balance) => {
-      if (balance.account_id === savingsId) balances.SAVINGS = balance
-      else balances[balance.asset] = balance
+    const wallets: Wallets = {}
+    json.balance.forEach((wallet: Wallet) => {
+      if (wallet.account_id === savingsId) wallets.SAVINGS = wallet
+      else wallets[wallet.asset] = wallet
     })
-    dispatch(setBalances(balances))
+    dispatch(setWallets(wallets))
   } catch (err) {
     console.error({ err })
     dispatch(setError(err.message))
