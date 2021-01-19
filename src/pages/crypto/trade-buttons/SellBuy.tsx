@@ -34,7 +34,6 @@ const SellBuy: FC<Props> = ({ refresh }) => {
       const amount = prompt(
         `How much would you like to Sell Out?\nAvailable: ${available} ${asset}\nMin: ${minTradable} ${asset}`
       )
-      console.log({ amount, minTradable })
       if (
         amount === null ||
         isNaN(Number(amount)) ||
@@ -63,7 +62,7 @@ const SellBuy: FC<Props> = ({ refresh }) => {
 
       try {
         const res1 = await fetch(
-          `${proxyUrl}https://api.luno.com/api/1/marketorder?pair=${configs[asset].pair}&type=SELL&counter_volume=${amount}`,
+          `${proxyUrl}https://api.luno.com/api/1/marketorder?pair=${configs[asset].pair}&type=SELL&base_volume=${amount}`,
           { method: 'POST', headers: { Authorization } }
         )
         const json1 = await res1.json()
@@ -87,8 +86,6 @@ const SellBuy: FC<Props> = ({ refresh }) => {
       }
     }
   }, [asset, available, bid, refresh, wallet])
-
-  console.log({ asset, wallet })
 
   if (!asset || !wallet) return null
 
