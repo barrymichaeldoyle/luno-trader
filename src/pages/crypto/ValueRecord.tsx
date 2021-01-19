@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { Table } from '../../components'
-import { format } from '../../utils'
+import { configs, format } from '../../utils'
 
 const ValueTable = styled(Table)`
   & > div > div {
@@ -36,10 +36,16 @@ const ValueRecord: FC = () => {
   const asset = useSelector(state => state.selected.asset)
   const wallet = useSelector(state => asset && state.wallets.assets[asset])
 
+  if (!asset) return null
+
   const available = useMemo(
     () =>
       wallet
-        ? Number((Number(wallet.balance) - Number(wallet.reserved)).toFixed(6))
+        ? Number(
+            (Number(wallet.balance) - Number(wallet.reserved)).toFixed(
+              configs[asset].precision
+            )
+          )
         : 0,
     [wallet]
   )
@@ -63,7 +69,7 @@ const ValueRecord: FC = () => {
         <div>
           <div>R {format(bid)}</div>
           <div>R {format(ask)}</div>
-          <div>{Number(wallet.balance)}</div>
+          <div>{Number(wallet.balance).toFixed(configs[asset].precision)}</div>
           <div>R {zarValue}</div>
           <div></div>
         </div>

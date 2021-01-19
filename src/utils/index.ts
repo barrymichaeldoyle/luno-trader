@@ -1,5 +1,32 @@
 import { ASSET, TickerPair } from './interfaces'
 
+export const configs = {
+  XBT: {
+    pair: 'XBTZAR',
+    precision: 6,
+    minTradable: 0.0005,
+    zarPrecision: 0
+  },
+  ETH: {
+    pair: 'ETHZAR',
+    precision: 6,
+    minTradable: 0.0005,
+    zarPrecision: 0
+  },
+  LTC: {
+    pair: 'LTCZAR',
+    precision: 4,
+    minTradable: 0.001,
+    zarPrecision: 0
+  },
+  XRP: {
+    pair: 'XRPZAR',
+    precision: 0,
+    minTradable: 1,
+    zarPrecision: 2
+  }
+}
+
 const {
   REACT_APP_API_KEY,
   REACT_APP_API_SECRET,

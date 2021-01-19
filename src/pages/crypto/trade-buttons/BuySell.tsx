@@ -2,27 +2,17 @@ import React, { FC, useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Button } from '../../../components'
-import { Authorization, format, proxyUrl, TickerPair } from '../../../utils'
+import { Authorization, configs, format, proxyUrl } from '../../../utils'
 
-interface Config {
-  minTradable: number
-  pair: TickerPair
-  precision: number
-  zarPrecision: number
-}
-
-interface Props extends Config {
+interface Props {
   refresh: () => void
 }
 
-const BuySell: FC<Props> = ({
-  minTradable,
-  pair,
-  precision,
-  refresh,
-  zarPrecision
-}) => {
+const BuySell: FC<Props> = ({ refresh }) => {
+  const asset = useSelector(state => state.selected.asset)
+  if (!asset) return null
   const [isTrading, setIsTrading] = useState(false)
+  const { minTradable, zarPrecision, pair, precision } = configs[asset]
   const ask = useSelector(state => state.tickers.tickers[pair]?.ask)
   const assets = useSelector(state => state.wallets.assets)
 
