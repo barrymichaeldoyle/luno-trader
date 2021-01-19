@@ -38,7 +38,7 @@ const BuySell: FC<Props> = ({ refresh }) => {
       const amount = prompt(
         `How much would you like to Buy In?\nAvailable: R ${format(
           availableZar
-        )}\nMin: R ${format(minAmount ?? '0')} (with 0% yield)`
+        )}\nMin: R ${format(minAmount ?? '0')}`
       )
       if (
         amount === null ||
@@ -61,8 +61,7 @@ const BuySell: FC<Props> = ({ refresh }) => {
         setIsTrading(false)
         return alert('Invalid Input')
       }
-      const feePercent = 0.001
-      const yieldMultiplier = 1 + feePercent + Number(expectedYieldInput) / 100
+      const yieldMultiplier = 1 + Number(expectedYieldInput) / 100 + 0.001
       const currentAskPrice = Number(ask)
       const nextOrderPrice = currentAskPrice * yieldMultiplier
       const nextVolume = (Number(amount) / currentAskPrice) * 0.99
