@@ -49,6 +49,19 @@ const ValueRecord: FC = () => {
     [asset, wallet]
   )
 
+  const availableValue = useMemo(
+    () =>
+      wallet
+        ? format(
+            (
+              (Number(wallet.balance) - Number(wallet.reserved)) *
+              Number(bid)
+            ).toString()
+          )
+        : '0',
+    [bid, wallet]
+  )
+
   const availableZar = useMemo(
     () =>
       zarWallet
@@ -87,10 +100,12 @@ const ValueRecord: FC = () => {
       <ValueTable>
         <div>
           <div>Available</div>
+          <div>Value</div>
           <div>Available Rands</div>
         </div>
         <div>
           <div>{available}</div>
+          <div>R {availableValue}</div>
           <div>R {availableZar}</div>
         </div>
       </ValueTable>
