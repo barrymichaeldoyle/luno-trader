@@ -1,13 +1,11 @@
 import { FC, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getBalances } from '../../../reducer/balances'
-import { getTickers } from '../../../reducer/tickers'
 import { ASSET, format } from '../../../utils'
 
 const Total: FC = () => {
-  const { tickers } = useSelector<any, any>(getTickers)
-  const { assets } = useSelector(getBalances)
+  const tickers = useSelector(state => state.tickers.tickers)
+  const assets = useSelector(state => state.balances.assets)
 
   const totalZarValue = useMemo(() => {
     let zarSum = 0

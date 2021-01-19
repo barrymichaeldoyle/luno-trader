@@ -1,7 +1,6 @@
 import React, { FC, lazy, Suspense, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { getAsset } from './reducer/selectedAsset'
 import { fetchTickers } from './reducer/tickers'
 
 const Crypto = lazy(() => import('./pages/crypto'))
@@ -10,7 +9,7 @@ const Main = lazy(() => import('./pages/main'))
 
 const Routes: FC = () => {
   const dispatch = useDispatch()
-  const selectedAsset = useSelector(getAsset)
+  const asset = useSelector(state => state.selected.asset)
 
   useEffect(() => {
     dispatch(fetchTickers())
@@ -18,13 +17,7 @@ const Routes: FC = () => {
 
   return (
     <Suspense fallback={null}>
-      {selectedAsset === null ? (
-        <Main />
-      ) : selectedAsset === 'ZAR' ? (
-        <ZAR />
-      ) : (
-        <Crypto />
-      )}
+      {!asset ? <Main /> : asset === 'ZAR' ? <ZAR /> : <Crypto />}
     </Suspense>
   )
 }

@@ -10,7 +10,7 @@ const {
 export const proxyUrl = REACT_APP_PROXY_URL
 export const savingsId = REACT_APP_SAVINGS_ID
 
-export const assetLabel = (asset: ASSET): string => {
+export const assetLabel = (asset: ASSET | null): string => {
   switch (asset) {
     case 'SAVINGS':
       return 'Savings (BTC)'

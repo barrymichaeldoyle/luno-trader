@@ -2,7 +2,7 @@ import React, { FC, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { ColorDiv, LinkButton } from '../../../components'
-import { selectAsset } from '../../../reducer/selectedAsset'
+import { selectAsset } from '../../../reducer/selected'
 import { format, pairLabel, TickerPair } from '../../../utils'
 
 interface Props {
@@ -11,10 +11,12 @@ interface Props {
 
 const Price: FC<Props> = ({ pair }) => {
   const dispatch = useDispatch()
-  const pairOrders = useSelector<any, any>(
+  const pairOrders = useSelector(
     state => state.pendingOrders.orders[pair] ?? []
   )
-  const tickerPair = useSelector<any, any>(state => state.tickers.tickers[pair])
+  const tickerPair = useSelector(state => state.tickers.tickers[pair])
+
+  if (!tickerPair) return null
 
   const nearestOpenOrderPrice = useMemo(() => {
     if (pairOrders.length === 0) return undefined

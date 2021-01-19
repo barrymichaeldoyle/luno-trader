@@ -1,23 +1,36 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Authorization, Order, proxyUrl } from '../utils'
+import { Authorization, Order, proxyUrl, STATUS } from '../utils'
+
+interface State {
+  error?: string
+  orders: {
+    XBTZAR: Order[]
+    LTCZAR: Order[]
+    ETHZAR: Order[]
+    XRPZAR: Order[]
+  }
+  status: STATUS
+}
+
+const initialState: State = {
+  orders: {
+    XBTZAR: [],
+    LTCZAR: [],
+    ETHZAR: [],
+    XRPZAR: []
+  },
+  status: 'IDLE'
+}
 
 export const slice = createSlice({
   name: 'pendingOrders',
-  initialState: {
-    orders: {
-      XBTZAR: [],
-      LTCZAR: [],
-      ETHZAR: [],
-      XRPZAR: []
-    },
-    status: 'IDLE'
-  },
+  initialState,
   reducers: {
     setError: (state, { payload }) => ({
       ...state,
       error: payload,
-      status: 'ERROR'
+      status: 'FAILED'
     }),
     setOrders: (state, { payload }) => ({
       ...state,
@@ -55,7 +68,5 @@ export const fetchPendingOrders = () => async dispatch => {
     dispatch(setError(err.message))
   }
 }
-
-export const getPendingOrders = ({ pendingOrders }) => pendingOrders
 
 export default slice.reducer

@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { Table } from '../../../components'
+import { Table } from '../../../components/styles'
 import Order from './Order'
 
 const OrdersTable = styled(Table)`
@@ -28,8 +28,8 @@ const OrdersTable = styled(Table)`
 `
 
 const PendingOrders: FC = () => {
-  const orders = useSelector<any, any>(
-    state => state.pendingOrders.orders[`${state.selectedAsset}ZAR`]
+  const orders = useSelector(
+    state => state.pendingOrders.orders[`${state.selected.asset}ZAR`]
   )
 
   return (

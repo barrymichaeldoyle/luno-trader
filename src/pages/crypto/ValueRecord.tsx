@@ -30,11 +30,12 @@ const ValueTable = styled(Table)`
 `
 
 const ValueRecord: FC = () => {
-  const { ask, bid } = useSelector<any, any>(
-    state => state.tickers.tickers[`${state.selectedAsset}ZAR`]
+  const { ask, bid } = useSelector(
+    state => state.tickers.tickers[`${state.selected.asset}ZAR`]
   )
-  const { balance } = useSelector<any, any>(
-    state => state.balances.assets[state.selectedAsset] ?? ''
+  const asset = useSelector(state => state.selected.asset)
+  const balance = useSelector(state =>
+    asset ? state.balances.assets[asset]?.balance ?? '' : ''
   )
 
   const zarValue = useMemo(() => {

@@ -1,15 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ASSET, Authorization, proxyUrl, Tickers } from '../utils'
+import { Authorization, proxyUrl, STATUS, Tickers } from '../utils'
+
+interface State {
+  error?: string
+  status: STATUS
+  tickers: Tickers
+}
+
+const initialState: State = {
+  status: 'IDLE',
+  tickers: {}
+}
 
 export const slice = createSlice({
   name: 'tickers',
-  initialState: { status: 'IDLE', tickers: {} },
+  initialState,
   reducers: {
     setError: (state, { payload }) => ({
       ...state,
       error: payload,
-      status: 'ERROR'
+      status: 'FAILED'
     }),
     setTickers: (state, { payload }) => ({
       ...state,
@@ -51,9 +62,5 @@ export const fetchTickers = () => async dispatch => {
     dispatch(setError(err.message))
   }
 }
-
-export const getTickers = ({ tickers }) => tickers
-export const getTicker = (asset: ASSET) => ({ tickers }) =>
-  tickers.assets[asset]
 
 export default slice.reducer

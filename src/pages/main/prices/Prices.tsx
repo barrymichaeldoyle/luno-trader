@@ -4,7 +4,6 @@ import styled from 'styled-components'
 
 import { Button, Container, Table } from '../../../components'
 import { fetchPendingOrders } from '../../../reducer/pendingOrders'
-import { getTickers } from '../../../reducer/tickers'
 import { TickerPair } from '../../../utils'
 import Price from './Price'
 
@@ -30,7 +29,7 @@ const PriceTable = styled(Table)`
 
 const Prices: FC = () => {
   const dispatch = useDispatch()
-  const { error, status, tickers } = useSelector(getTickers)
+  const { error, status, tickers } = useSelector(state => state.tickers)
 
   const fetch = useCallback(() => dispatch(fetchPendingOrders()), [dispatch])
 
@@ -42,7 +41,7 @@ const Prices: FC = () => {
     <div>
       <h2>Buying Prices</h2>
       <Container>
-        {status === 'ERROR' ? (
+        {status === 'FAILED' ? (
           <p>{error}</p>
         ) : (
           <>

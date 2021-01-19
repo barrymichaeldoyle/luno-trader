@@ -3,11 +3,11 @@ import { configureStore } from '@reduxjs/toolkit'
 import balances from './balances'
 import completeOrders from './completeOrders'
 import pendingOrders from './pendingOrders'
-import selectedAsset from './selectedAsset'
+import selected from './selected'
 import tickers from './tickers'
 
 const store = configureStore({
-  reducer: { balances, completeOrders, pendingOrders, selectedAsset, tickers }
+  reducer: { balances, completeOrders, pendingOrders, selected, tickers }
 })
 
 export default store

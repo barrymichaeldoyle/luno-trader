@@ -54,9 +54,10 @@ export interface Orders {
 }
 
 export interface Wallets {
-  XBTZAR?: Balance
-  ETHZAR?: Balance
-  LTCZAR?: Balance
-  XRPZAR?: Balance
+  XBT?: Balance
+  ETH?: Balance
+  LTC?: Balance
+  XRP?: Balance
   SAVINGS?: Balance
+  ZAR?: Balance
 }

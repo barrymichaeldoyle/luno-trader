@@ -2,9 +2,7 @@ import React, { FC, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { LinkButton } from '../../../components'
-import { getWallet } from '../../../reducer/balances'
-import { selectAsset } from '../../../reducer/selectedAsset'
-import { getTickers } from '../../../reducer/tickers'
+import { selectAsset } from '../../../reducer/selected'
 import { ASSET, assetLabel, format } from '../../../utils'
 
 interface Props {
@@ -16,8 +14,8 @@ const showView = (account_id: string) => account_id !== REACT_APP_SAVINGS_ID
 
 const Wallet: FC<Props> = ({ asset }) => {
   const dispatch = useDispatch()
-  const { tickers } = useSelector<any, any>(getTickers)
-  const { account_id, balance } = useSelector(getWallet(asset))
+  const tickers = useSelector(state => state.tickers.tickers)
+  const wallet = useSelector(state => state.balances.assets[asset])
 
   const calculateZarValue = useCallback(
     (asset: ASSET, balance: string) => {
@@ -56,15 +54,19 @@ const Wallet: FC<Props> = ({ asset }) => {
     asset
   ])
 
+  if (!wallet) return null
+
   return (
-    <div key={account_id}>
+    <div key={wallet.account_id}>
       <div>{assetLabel(asset as ASSET)}</div>
       <div>
-        {asset === 'ZAR' ? Number(balance).toFixed(2) : Number(balance)}
+        {asset === 'ZAR'
+          ? Number(wallet.balance).toFixed(2)
+          : Number(wallet.balance)}
       </div>
-      <div>R {calculateZarValue(asset as ASSET, balance)}</div>
+      <div>R {calculateZarValue(asset as ASSET, wallet.balance)}</div>
       <div>
-        {showView(account_id) && (
+        {showView(wallet.account_id) && (
           <LinkButton onClick={viewAsset}>View</LinkButton>
         )}
       </div>

@@ -1,10 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ASSET, Authorization, Balance, proxyUrl, savingsId, Wallets } from '../utils'
+import { Authorization, Balance, proxyUrl, savingsId, STATUS, Wallets } from '../utils'
+
+interface State {
+  assets: Wallets
+  error?: string
+  status: STATUS
+}
+
+const initialState: State = {
+  assets: {},
+  status: 'IDLE'
+}
 
 export const slice = createSlice({
   name: 'balances',
-  initialState: { assets: {}, status: 'IDLE' },
+  initialState,
   reducers: {
     setBalances: (state, { payload }) => ({
       ...state,
@@ -15,7 +26,7 @@ export const slice = createSlice({
     setError: (state, { payload }) => ({
       ...state,
       error: payload,
-      status: 'ERROR'
+      status: 'FAILED'
     }),
     setStatus: (state, { payload }) => ({ ...state, status: payload })
   }
@@ -42,9 +53,5 @@ export const fetchBalances = () => async dispatch => {
     dispatch(setError(err.message))
   }
 }
-
-export const getBalances = ({ balances }) => balances
-export const getWallet = (asset: ASSET) => ({ balances }) =>
-  balances.assets[asset]
 
 export default slice.reducer

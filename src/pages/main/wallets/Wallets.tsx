@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { Button, Container, Table } from '../../../components'
-import { fetchBalances, getBalances } from '../../../reducer/balances'
+import { fetchBalances } from '../../../reducer/balances'
 import { ASSET } from '../../../utils'
 import Total from './Total'
 import Wallet from './Wallet'
@@ -33,7 +33,7 @@ const WalletTable = styled(Table)`
 `
 
 const Wallets: FC = () => {
-  const { assets, error, status } = useSelector(getBalances)
+  const { assets, error, status } = useSelector(state => state.balances)
   const dispatch = useDispatch()
 
   const fetch = useCallback(async () => {
@@ -47,7 +47,7 @@ const Wallets: FC = () => {
   return (
     <Container>
       <h2>Wallets</h2>
-      {status === 'ERROR' ? (
+      {status === 'FAILED' ? (
         <p>{error}</p>
       ) : (
         <>
