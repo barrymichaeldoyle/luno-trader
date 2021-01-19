@@ -7,7 +7,7 @@ let mainWindow
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 900,
     show: false
   })
   const startURL = isDev

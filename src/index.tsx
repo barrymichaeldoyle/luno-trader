@@ -14,7 +14,6 @@ ReactDOM.render(
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         <Layout>
-          {process.env.REACT_APP_PROXY_URL}
           <Routes />
         </Layout>
       </ThemeProvider>
