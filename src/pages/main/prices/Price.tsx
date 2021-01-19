@@ -16,10 +16,8 @@ const Price: FC<Props> = ({ pair }) => {
   )
   const tickerPair = useSelector(state => state.tickers.tickers[pair])
 
-  if (!tickerPair) return null
-
   const nearestOpenOrderPrice = useMemo(() => {
-    if (pairOrders.length === 0) return undefined
+    if (pairOrders.length === 0 || !tickerPair) return undefined
 
     let result: number | undefined
     let smallestDifference = Infinity
@@ -37,17 +35,19 @@ const Price: FC<Props> = ({ pair }) => {
       }
     })
     return result
-  }, [pairOrders, tickerPair])
+  }, [pair, pairOrders, tickerPair])
 
   const viewAsset = useCallback(
     () => dispatch(selectAsset(pair.substring(0, 3))),
     [dispatch, pair]
   )
 
+  if (!tickerPair) return null
+
   return (
     <div>
       <div>{pairLabel(pair as TickerPair)}</div>
-      <div>R {format(Number(tickerPair.ask))}</div>
+      <div>R {format(tickerPair.ask)}</div>
       <ColorDiv
         color={
           (nearestOpenOrderPrice ?? 0) > Number(tickerPair.ask)
@@ -55,7 +55,7 @@ const Price: FC<Props> = ({ pair }) => {
             : 'red'
         }
       >
-        {nearestOpenOrderPrice ? format(nearestOpenOrderPrice) : ''}
+        {nearestOpenOrderPrice ? format(nearestOpenOrderPrice.toString()) : ''}
       </ColorDiv>
       <div>
         <LinkButton onClick={viewAsset}>View</LinkButton>

@@ -9,38 +9,42 @@ interface Props {
 }
 
 const BuySell: FC<Props> = ({ refresh }) => {
-  const asset = useSelector(state => state.selected.asset)
-  if (!asset) return null
   const [isTrading, setIsTrading] = useState(false)
-  const { minTradable, zarPrecision, pair, precision } = configs[asset]
-  const ask = useSelector(state => state.tickers.tickers[pair]?.ask)
-  const assets = useSelector(state => state.wallets.assets)
+  const asset = useSelector(state => state.selected.asset)
+  const zarWallet = useSelector(state => state.wallets.assets.ZAR)
+  const ask = useSelector(
+    state => asset && state.tickers.tickers[configs[asset].pair]?.ask
+  )
 
-  if (!ask) return null
+  const availableZar = useMemo(
+    () =>
+      zarWallet
+        ? Math.floor(
+            Number(zarWallet.balance) - Number(zarWallet.reserved)
+          ).toString()
+        : '0',
+    [zarWallet]
+  )
 
-  const availableZar = useMemo(() => {
-    if (assets.ZAR)
-      return Math.floor(
-        Number(assets.ZAR.balance) - Number(assets.ZAR.reserved)
-      ).toString()
-    return '-'
-  }, [assets.ZAR])
-
-  const minAmount = useMemo(() => Math.ceil(Number(ask) * minTradable), [ask])
+  const minAmount = useMemo(
+    () =>
+      asset && Math.ceil(Number(ask) * configs[asset].minTradable).toString(),
+    [asset, ask]
+  )
 
   const buySell = useCallback(async () => {
-    if (ask) {
+    if (asset && ask) {
       setIsTrading(true)
       const amount = prompt(
         `How much would you like to Buy In?\nAvailable: R ${format(
           availableZar
-        )}\nMin: R ${format(minAmount)} (with 0% yield)`
+        )}\nMin: R ${format(minAmount ?? '0')} (with 0% yield)`
       )
       if (
         amount === null ||
         isNaN(Number(amount)) ||
         amount.length === 0 ||
-        Number(amount) < minAmount
+        Number(amount) < Number(minAmount)
       ) {
         setIsTrading(false)
         return alert('Invalid Input')
@@ -64,15 +68,17 @@ const BuySell: FC<Props> = ({ refresh }) => {
       const nextVolume = (Number(amount) / currentAskPrice) * 0.99
       try {
         const res1 = await fetch(
-          `${proxyUrl}https://api.luno.com/api/1/marketorder?pair=${pair}&type=BUY&counter_volume=${amount}`,
+          `${proxyUrl}https://api.luno.com/api/1/marketorder?pair=${configs[asset].pair}&type=BUY&counter_volume=${amount}`,
           { method: 'POST', headers: { Authorization } }
         )
         const json1 = await res1.json()
         if (json1.error && json1.error.length > 0) return alert(json1.error)
         const res2 = await fetch(
-          `${proxyUrl}https://api.luno.com/api/1/postorder?pair=${pair}&type=ASK&volume=${nextVolume.toFixed(
-            precision
-          )}&price=${nextOrderPrice.toFixed(zarPrecision)}`,
+          `${proxyUrl}https://api.luno.com/api/1/postorder?pair=${
+            configs[asset].pair
+          }&type=ASK&volume=${nextVolume.toFixed(
+            configs[asset].precision
+          )}&price=${nextOrderPrice.toFixed(configs[asset].zarPrecision)}`,
           { method: 'POST', headers: { Authorization } }
         )
         const json2 = await res2.json()
@@ -85,7 +91,9 @@ const BuySell: FC<Props> = ({ refresh }) => {
         setIsTrading(false)
       }
     }
-  }, [ask])
+  }, [asset, ask, availableZar, minAmount, refresh])
+
+  if (!ask || !asset) return null
 
   return (
     <div>

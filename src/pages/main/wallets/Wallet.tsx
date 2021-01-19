@@ -22,26 +22,36 @@ const Wallet: FC<Props> = ({ asset }) => {
       switch (asset) {
         case 'XBT':
           if (tickers.XBTZAR)
-            return format(Number(balance) * Number(tickers.XBTZAR.bid))
+            return format(
+              (Number(balance) * Number(tickers.XBTZAR.bid)).toString()
+            )
           return '-'
         case 'SAVINGS':
           if (tickers.XBTZAR)
-            return format(Number(balance) * Number(tickers.XBTZAR.bid))
+            return format(
+              (Number(balance) * Number(tickers.XBTZAR.bid)).toString()
+            )
           return '-'
         case 'LTC':
           if (tickers.LTCZAR)
-            return format(Number(balance) * Number(tickers.LTCZAR.bid))
+            return format(
+              (Number(balance) * Number(tickers.LTCZAR.bid)).toString()
+            )
           return '-'
         case 'ETH':
           if (tickers.ETHZAR)
-            return format(Number(balance) * Number(tickers.ETHZAR.bid))
+            return format(
+              (Number(balance) * Number(tickers.ETHZAR.bid)).toString()
+            )
           return '-'
         case 'XRP':
           if (tickers.XRPZAR)
-            return format(Number(balance) * Number(tickers.XRPZAR.bid))
+            return format(
+              (Number(balance) * Number(tickers.XRPZAR.bid)).toString()
+            )
           return '-'
         case 'ZAR':
-          return format(Number(balance))
+          return format(balance)
         default:
           return '-'
       }

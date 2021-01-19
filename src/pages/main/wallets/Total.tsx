@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react'
+import React, { FC, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { ASSET, format } from '../../../utils'
@@ -36,7 +36,7 @@ const Total: FC = () => {
           break
       }
     })
-    return format(zarSum)
+    return format(zarSum.toString())
   }, [assets, tickers])
 
   return (

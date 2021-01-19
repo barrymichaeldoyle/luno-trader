@@ -21,7 +21,10 @@ const OrderComponent: FC<Order> = ({
     return { price: limit_price, amount: limit_volume }
   }, [base, counter, limit_price, limit_volume, type])
 
-  const value = useMemo(() => Number(price) * Number(amount), [amount, price])
+  const value = useMemo(() => (Number(price) * Number(amount)).toString(), [
+    amount,
+    price
+  ])
 
   return (
     <div>

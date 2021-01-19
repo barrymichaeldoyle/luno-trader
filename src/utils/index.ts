@@ -60,7 +60,7 @@ export const Authorization = `Basic ${btoa(
   `${REACT_APP_API_KEY}:${REACT_APP_API_SECRET}`
 )}`
 
-export const format = price => {
+export const format = (price: string) => {
   const pieces = parseFloat(price).toFixed(2).split('')
   let ii = pieces.length - 3
   while ((ii -= 3) > 0) pieces.splice(ii, 0, ' ')

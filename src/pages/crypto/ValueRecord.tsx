@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react'
+import React, { FC, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -35,27 +35,37 @@ const ValueRecord: FC = () => {
   )
   const asset = useSelector(state => state.selected.asset)
   const wallet = useSelector(state => asset && state.wallets.assets[asset])
-
-  if (!asset) return null
+  const zarWallet = useSelector(state => state.wallets.assets.ZAR)
 
   const available = useMemo(
     () =>
-      wallet
+      wallet && asset
         ? Number(
             (Number(wallet.balance) - Number(wallet.reserved)).toFixed(
               configs[asset].precision
             )
           )
         : 0,
-    [wallet]
+    [asset, wallet]
   )
 
-  const zarValue = useMemo(() => {
-    if (wallet) return format((Number(wallet.balance) * Number(bid)).toString())
-    return '-'
-  }, [wallet, bid])
+  const availableZar = useMemo(
+    () =>
+      zarWallet
+        ? Math.floor(
+            Number(zarWallet.balance) - Number(zarWallet.reserved)
+          ).toString()
+        : '0',
+    [zarWallet]
+  )
 
-  if (!wallet) return null
+  const zarValue = useMemo(
+    () =>
+      wallet ? format((Number(wallet.balance) * Number(bid)).toString()) : '-',
+    [wallet, bid]
+  )
+
+  if (!wallet || !asset) return null
 
   return (
     <>
@@ -77,9 +87,11 @@ const ValueRecord: FC = () => {
       <ValueTable>
         <div>
           <div>Available</div>
+          <div>Available Rands</div>
         </div>
         <div>
           <div>{available}</div>
+          <div>R {availableZar}</div>
         </div>
       </ValueTable>
     </>
