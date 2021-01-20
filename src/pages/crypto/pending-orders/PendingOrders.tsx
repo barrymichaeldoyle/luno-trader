@@ -32,6 +32,8 @@ const PendingOrders: FC = () => {
     state => state.pendingOrders.orders[`${state.selected.asset}ZAR`]
   )
 
+  if (orders.length === 0) return <h4>You currently have no open orders</h4>
+
   return (
     <OrdersTable>
       <div>
