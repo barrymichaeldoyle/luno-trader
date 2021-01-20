@@ -1,9 +1,8 @@
-import React, { FC, useCallback, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { FC, useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { Button, Container, Table } from '../../../components'
-import { fetchWallets } from '../../../reducer/wallets'
+import { Container, Table } from '../../../components'
 import { ASSET } from '../../../utils'
 import Total from './Total'
 import Wallet from './Wallet'
@@ -25,7 +24,12 @@ const WalletTable = styled(Table)`
         width: 120px;
       }
       &:nth-child(4) {
-        text-align: right;
+        font-weight: bold;
+        text-align: center;
+        width: 60px;
+      }
+      &:nth-child(5) {
+        text-align: center;
         width: 50px;
       }
     }
@@ -34,15 +38,15 @@ const WalletTable = styled(Table)`
 
 const Wallets: FC = () => {
   const { assets, error, status } = useSelector(state => state.wallets)
-  const dispatch = useDispatch()
 
-  const fetch = useCallback(async () => {
-    dispatch(fetchWallets())
-  }, [dispatch])
-
-  useEffect(() => {
-    fetch()
-  }, [fetch])
+  const sortedKeys = useMemo(() => {
+    const keys = Object.keys(assets)
+    if (keys.includes('SAVINGS')) {
+      keys.splice(keys.indexOf('SAVINGS'), 1)
+      keys.unshift('SAVINGS')
+    }
+    return keys
+  }, [assets])
 
   return (
     <Container>
@@ -50,24 +54,20 @@ const Wallets: FC = () => {
       {status === 'FAILED' ? (
         <p>{error}</p>
       ) : (
-        <>
-          <WalletTable>
-            <div>
-              <div>Currency</div>
-              <div>Units</div>
-              <div>Value</div>
-              <div></div>
-            </div>
-            {Object.keys(assets).map(
-              asset =>
-                asset !== 'BCH' && <Wallet key={asset} asset={asset as ASSET} />
-            )}
-            <Total />
-          </WalletTable>
-          <Button onClick={fetch} outline>
-            Refresh{status === 'LOADING' ? 'ing' : ''}
-          </Button>
-        </>
+        <WalletTable>
+          <div>
+            <div>Currency</div>
+            <div>Units</div>
+            <div>Value</div>
+            <div>Trade</div>
+            <div></div>
+          </div>
+          {sortedKeys.map(
+            asset =>
+              asset !== 'BCH' && <Wallet key={asset} asset={asset as ASSET} />
+          )}
+          <Total />
+        </WalletTable>
       )}
     </Container>
   )

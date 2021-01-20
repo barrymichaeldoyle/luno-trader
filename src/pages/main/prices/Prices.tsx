@@ -1,9 +1,8 @@
-import React, { FC, useCallback, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { FC } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { Button, Container, Table } from '../../../components'
-import { fetchPendingOrders } from '../../../reducer/pendingOrders'
+import { Container, Table } from '../../../components'
 import { TickerPair } from '../../../utils'
 import Price from './Price'
 
@@ -28,14 +27,7 @@ const PriceTable = styled(Table)`
 `
 
 const Prices: FC = () => {
-  const dispatch = useDispatch()
   const { error, status, tickers } = useSelector(state => state.tickers)
-
-  const fetch = useCallback(() => dispatch(fetchPendingOrders()), [dispatch])
-
-  useEffect(() => {
-    fetch()
-  }, [fetch])
 
   return (
     <div>
@@ -44,22 +36,17 @@ const Prices: FC = () => {
         {status === 'FAILED' ? (
           <p>{error}</p>
         ) : (
-          <>
-            <PriceTable>
-              <div>
-                <div>Currency</div>
-                <div>Price</div>
-                <div>Open Order</div>
-                <div></div>
-              </div>
-              {Object.keys(tickers).map(pair => (
-                <Price key={pair} pair={pair as TickerPair} />
-              ))}
-            </PriceTable>
-            <Button onClick={fetch} outline>
-              Refresh{status === 'LOADING' ? 'ing' : ''}
-            </Button>
-          </>
+          <PriceTable>
+            <div>
+              <div>Currency</div>
+              <div>Price</div>
+              <div>Open Order</div>
+              <div></div>
+            </div>
+            {Object.keys(tickers).map(pair => (
+              <Price key={pair} pair={pair as TickerPair} />
+            ))}
+          </PriceTable>
         )}
       </Container>
     </div>

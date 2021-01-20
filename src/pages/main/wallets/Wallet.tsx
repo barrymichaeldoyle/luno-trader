@@ -1,9 +1,9 @@
-import React, { FC, useCallback } from 'react'
+import React, { FC, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { LinkButton } from '../../../components'
 import { selectAsset } from '../../../reducer/selected'
-import { ASSET, assetLabel, format } from '../../../utils'
+import { ASSET, assetLabel, format, savingsId } from '../../../utils'
 
 interface Props {
   asset: ASSET
@@ -64,23 +64,47 @@ const Wallet: FC<Props> = ({ asset }) => {
     asset
   ])
 
+  const canTrade = useMemo(() => {
+    if (wallet) {
+      if (wallet.account_id === savingsId) return ''
+      if (
+        wallet.asset === 'ZAR' &&
+        Number(wallet.balance) - Number(wallet.reserved) > 300
+      )
+        return 'Y'
+      if (
+        tickers[`${wallet.asset}ZAR`] &&
+        Number(wallet.balance) -
+          Number(wallet.reserved) * Number(tickers[`${wallet.asset}ZAR`].bid) >
+          300
+      )
+        return 'Y'
+    }
+    return ''
+  }, [tickers, wallet])
+
   if (!wallet) return null
 
   return (
-    <div key={wallet.account_id}>
-      <div>{assetLabel(asset as ASSET)}</div>
-      <div>
-        {asset === 'ZAR'
-          ? Number(wallet.balance).toFixed(2)
-          : Number(wallet.balance)}
+    <>
+      {wallet.asset === 'ZAR' && <br />}
+      <div key={wallet.account_id}>
+        <div>{assetLabel(asset as ASSET)}</div>
+        <div>
+          {asset === 'ZAR'
+            ? Number(wallet.balance).toFixed(2)
+            : Number(wallet.balance)}
+        </div>
+        <div>R {calculateZarValue(asset as ASSET, wallet.balance)}</div>
+        <div>{canTrade}</div>
+        <div>
+          {showView(wallet.account_id) && (
+            <LinkButton onClick={viewAsset}>View</LinkButton>
+          )}
+        </div>
       </div>
-      <div>R {calculateZarValue(asset as ASSET, wallet.balance)}</div>
-      <div>
-        {showView(wallet.account_id) && (
-          <LinkButton onClick={viewAsset}>View</LinkButton>
-        )}
-      </div>
-    </div>
+      {wallet.account_id === savingsId && <br />}
+    </>
   )
 }
 

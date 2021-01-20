@@ -2,7 +2,7 @@
   "name": "luno-trader",
   "version": "0.1.0",
   "homepage": "./",
-  "main": "./main.js",
+  "main": "./public/electron.js",
   "productName": "Luno Trader",
   "private": false,
   "dependencies": {
@@ -34,6 +34,7 @@
     "electron": "^11.2.0",
     "electron-builder": "^22.9.1",
     "electron-packager": "^15.2.0",
+    "env-cmd": "^10.1.0",
     "eslint": "^7.18.0",
     "prettier": "^2.2.1",
     "react-hooks": "^1.0.1",
@@ -44,10 +45,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:production": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "electron-packager . --overwrite",
-    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\""
+    "dev": "concurrently -k \"BROWSER=none yarn start\" \"yarn electron\"",
+    "electron": "wait-on tcp:3000 && electron ."
   },
   "browserslist": {
     "production": [
