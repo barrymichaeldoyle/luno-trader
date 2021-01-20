@@ -68,20 +68,20 @@ const Wallet: FC<Props> = ({ asset }) => {
     if (wallet) {
       if (wallet.account_id === savingsId) return ''
       if (
-        wallet.asset === 'ZAR' &&
+        asset === 'ZAR' &&
         Number(wallet.balance) - Number(wallet.reserved) > 300
       )
         return 'Y'
       if (
-        tickers[`${wallet.asset}ZAR`] &&
-        Number(wallet.balance) -
-          Number(wallet.reserved) * Number(tickers[`${wallet.asset}ZAR`].bid) >
+        tickers[`${asset}ZAR`] &&
+        (Number(wallet.balance) - Number(wallet.reserved)) *
+          Number(tickers[`${asset}ZAR`].bid) >
           300
       )
         return 'Y'
     }
     return ''
-  }, [tickers, wallet])
+  }, [asset, tickers, wallet])
 
   if (!wallet) return null
 
