@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Authorization, proxyUrl, STATUS, Ticker, Tickers } from '../utils'
+import { Authorization, STATUS, Ticker, Tickers } from '../utils'
 
 interface State {
   error?: string
@@ -35,7 +35,7 @@ export const { setTickers, setError } = slice.actions
 
 export const fetchTickers = () => async dispatch => {
   try {
-    const res = await fetch(`${proxyUrl}https://api.luno.com/api/1/tickers`, {
+    const res = await fetch('https://api.luno.com/api/1/tickers', {
       method: 'GET',
       headers: { Authorization }
     })

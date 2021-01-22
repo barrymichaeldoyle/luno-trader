@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Authorization, proxyUrl, savingsId, STATUS, Wallet, Wallets } from '../utils'
+import { Authorization, savingsId, STATUS, Wallet, Wallets } from '../utils'
 
 interface State {
   assets: Wallets
@@ -37,7 +37,7 @@ export const { setWallets, setStatus, setError } = slice.actions
 export const fetchWallets = () => async dispatch => {
   dispatch(setStatus('LOADING'))
   try {
-    const res = await fetch(`${proxyUrl}https://api.luno.com/api/1/balance`, {
+    const res = await fetch('https://api.luno.com/api/1/balance', {
       method: 'GET',
       headers: { Authorization }
     })

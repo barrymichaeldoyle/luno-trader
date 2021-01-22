@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Authorization, Order, proxyUrl, STATUS } from '../utils'
+import { Authorization, Order, STATUS } from '../utils'
 
 interface State {
   error?: string
@@ -48,7 +48,7 @@ export const fetchPendingOrders = () => async dispatch => {
   dispatch(setStatus('LOADING'))
   try {
     const res = await fetch(
-      `${proxyUrl}https://api.luno.com/api/1/listorders?state=PENDING`,
+      'https://api.luno.com/api/1/listorders?state=PENDING',
       { method: 'GET', headers: { Authorization } }
     )
     const json = await res.json()
