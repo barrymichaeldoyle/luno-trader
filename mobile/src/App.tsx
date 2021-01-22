@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react'
 import styled from 'styled-components/native'
 
+import Auth from './pages/Auth'
 import Splash from './pages/Splash'
 
 interface Ticker {
@@ -35,6 +36,7 @@ const App: FC = () => {
   const [tickers, setTickers] = useState<Tickers>({})
   const [error, setError] = useState('')
 
+  return <Auth />
   if (true) return <Splash />
 
   return (
