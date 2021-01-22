@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Text } from 'react-native'
+import { Text, TextInput } from 'react-native'
 import styled from 'styled-components/native'
 
 const Wrapper = styled.View`
@@ -33,7 +33,12 @@ const Auth: FC = () => {
     <Wrapper>
       <Title>Luno Trader</Title>
       <Container>
-        <Text>Auth</Text>
+        <Text>API Key</Text>
+        <TextInput />
+        <Text>Secret</Text>
+        <TextInput />
+        <Text>Something Else</Text>
+        <TextInput />
       </Container>
     </Wrapper>
   )
