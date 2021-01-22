@@ -29,14 +29,6 @@ export const configs = {
   }
 }
 
-const {
-  REACT_APP_API_KEY,
-  REACT_APP_API_SECRET,
-  REACT_APP_SAVINGS_ID
-} = process.env
-
-export const savingsId = REACT_APP_SAVINGS_ID
-
 export const assetLabel = (asset: ASSET | null): string => {
   switch (asset) {
     case 'SAVINGS':
@@ -56,9 +48,7 @@ export const assetLabel = (asset: ASSET | null): string => {
   }
 }
 
-export const Authorization = `Basic ${base64.encode(
-  `${REACT_APP_API_KEY}:${REACT_APP_API_SECRET}`
-)}`
+export const Authorization = `Basic ${base64.encode('')}`
 
 export const format = (price: string) => {
   const pieces = parseFloat(price).toFixed(2).split('')

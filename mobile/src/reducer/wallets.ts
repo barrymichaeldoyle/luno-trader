@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Authorization, savingsId, STATUS, Wallet, Wallets } from '../utils'
+import { Authorization, STATUS, Wallet, Wallets } from '../utils'
 
 interface State {
   assets: Wallets
@@ -44,8 +44,8 @@ export const fetchWallets = () => async dispatch => {
     const json = await res.json()
     const wallets: Wallets = {}
     json.balance.forEach((wallet: Wallet) => {
-      if (wallet.account_id === savingsId) wallets.SAVINGS = wallet
-      else wallets[wallet.asset] = wallet
+      // if (wallet.account_id === savingsId) wallets.SAVINGS = wallet
+      wallets[wallet.asset] = wallet
     })
     dispatch(setWallets(wallets))
   } catch (err) {

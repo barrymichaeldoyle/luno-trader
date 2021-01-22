@@ -1,21 +1,23 @@
-import React, { FC } from 'react'
-import { Text, TextInput } from 'react-native'
+import React, { FC, useState } from 'react'
+import { Keyboard, Text, TextInput, TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components/native'
+
+import { Input } from '../components'
 
 const Wrapper = styled.View`
   align-items: center;
   background-color: #13326b;
   flex: 1;
-  justify-content: center;
-  padding: 60px 25px 40px 25px;
+  justify-content: flex-start;
+  padding: 65px 25px 40px 25px;
 `
 
 const Container = styled.View`
   align-items: center;
   background-color: #fff;
   border-radius: 15px;
-  flex: 1;
-  justify-content: center;
+  justify-content: flex-start;
+  padding: 20px;
   width: 100%;
 `
 
@@ -29,18 +31,30 @@ const Title = styled.Text`
 `
 
 const Auth: FC = () => {
+  const [apiKey, setApiKey] = useState('')
+  const [apiSecret, setApiSecret] = useState('')
+
   return (
-    <Wrapper>
-      <Title>Luno Trader</Title>
-      <Container>
-        <Text>API Key</Text>
-        <TextInput />
-        <Text>Secret</Text>
-        <TextInput />
-        <Text>Something Else</Text>
-        <TextInput />
-      </Container>
-    </Wrapper>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <Wrapper>
+        <Title>Luno Trader</Title>
+        <Container>
+          <Input
+            defaultValue={apiKey}
+            label="API Key"
+            onChangeText={setApiKey}
+            paste
+          />
+          <Input
+            defaultValue={apiSecret}
+            label="API Secret"
+            onChangeText={setApiSecret}
+            paste
+          />
+          <TextInput />
+        </Container>
+      </Wrapper>
+    </TouchableWithoutFeedback>
   )
 }
 
