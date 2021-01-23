@@ -1,5 +1,5 @@
 import Clipboard from 'expo-clipboard'
-import React, { FC, useCallback } from 'react'
+import React, { FC, useCallback, useState } from 'react'
 import styled, { css } from 'styled-components/native'
 
 import { MaterialIcons } from '@expo/vector-icons'
@@ -11,20 +11,22 @@ const Container = styled.View`
   width: 100%;
 `
 
-const Label = styled.Text`
-  color: ${({ theme }) => theme.darkBlue};
+const Label = styled.Text<{ focused?: boolean }>`
+  color: ${({ focused, theme }) => (focused ? theme.blue : theme.darkBlue)};
   font-weight: bold;
   font-size: 20px;
   margin-bottom: 3px;
 `
 
 const IconContainer = styled.TouchableOpacity`
-  background-color: ${theme.darkBlue};
+  background-color: ${theme.blue};
+  border: solid 1px ${theme.darkBlue};
+  border-left-width: 0;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-  height: 100%;
+  height: 40px;
   width: 40px;
-  padding: 6px;
+  padding: 6px 6px 6px 5px;
 `
 
 const InputContainer = styled.View`
@@ -32,10 +34,10 @@ const InputContainer = styled.View`
   flex-direction: row;
 `
 
-const StyledInput = styled.TextInput<{ paste: boolean }>`
-  ${({ paste, theme }) => css`
+const StyledInput = styled.TextInput<{ focused?: boolean; paste: boolean }>`
+  ${({ focused, paste, theme }) => css`
     height: 40px;
-    border: solid 1px ${theme.darkBlue};
+    border: solid 1px ${focused ? theme.blue : theme.darkBlue}
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     border-top-right-radius: ${paste ? 0 : 10}px;
@@ -58,6 +60,8 @@ const Input: FC<Props> = ({
   onChangeText,
   paste = false
 }) => {
+  const [isFocused, setIsFocused] = useState(false)
+
   const handlePaste = useCallback(async () => {
     const text = await Clipboard.getStringAsync()
     if (text.length > 0) onChangeText(text)
@@ -65,11 +69,14 @@ const Input: FC<Props> = ({
 
   return (
     <Container>
-      <Label>{label}</Label>
+      <Label focused={isFocused}>{label}</Label>
       <InputContainer>
         <StyledInput
+          focused={isFocused}
           defaultValue={defaultValue}
+          onBlur={() => setIsFocused(false)}
           onChangeText={onChangeText}
+          onFocus={() => setIsFocused(true)}
           paste={paste}
         />
         {paste && (

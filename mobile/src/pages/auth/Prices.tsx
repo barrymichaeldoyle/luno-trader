@@ -1,32 +1,9 @@
 import React, { FC } from 'react'
 import { Text, View } from 'react-native'
 import { useSelector } from 'react-redux'
-import styled, { css } from 'styled-components/native'
 
-import { Heading } from '../../components/styles'
+import { Cell, Heading, Row } from '../../components'
 import { format } from '../../utils'
-
-interface CellProps {
-  align?: 'left' | 'center' | 'right'
-  width?: number
-}
-
-const Cell = styled.Text<CellProps>`
-  ${({ align = 'left', width = 100 }) => css`
-    font-size: 16px;
-    height: 22px;
-    text-align: ${align};
-    width: ${width}px;
-  `}
-`
-
-const HeadCell = styled(Cell)`
-  font-weight: bold;
-`
-
-const Row = styled.View`
-  flex-direction: row;
-`
 
 const Prices: FC = () => {
   const { error, status, tickers } = useSelector(state => state.tickers)
@@ -39,8 +16,12 @@ const Prices: FC = () => {
       ) : (
         <View style={{ marginBottom: 20 }}>
           <Row>
-            <HeadCell width={80}>Currency</HeadCell>
-            <HeadCell align="right">Ask Price</HeadCell>
+            <Cell bold width={80}>
+              Currency
+            </Cell>
+            <Cell align="right" bold>
+              Ask Price
+            </Cell>
           </Row>
           <Row>
             <Cell width={80}>Bitcoin</Cell>
