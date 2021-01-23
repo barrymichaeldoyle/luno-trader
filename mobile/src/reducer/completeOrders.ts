@@ -1,6 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Authorization, Order, STATUS } from '../utils'
+import { Order, STATUS } from '../utils'
+import { getIsAuthValid } from './auth'
+import { GetState } from './interfaces'
+import { getAuthorization } from './utils'
 
 interface State {
   error?: string
@@ -44,14 +47,23 @@ export const slice = createSlice({
 
 export const { setOrders, setError, setStatus } = slice.actions
 
-export const fetchCompleteOrders = () => async (dispatch, getState) => {
-  const { asset } = getState().selected
-  if (asset) {
+export const fetchCompleteOrders = () => async (
+  dispatch,
+  getState: GetState
+) => {
+  const {
+    completeOrders: { status },
+    selected: { asset }
+  } = getState()
+  if (getIsAuthValid(getState) && asset && status !== 'LOADING') {
     dispatch(setStatus('LOADING'))
     try {
       const res = await fetch(
         'https://api.luno.com/api/1/listorders?state=COMPLETE&limit=10&pair=${asset}ZAR',
-        { method: 'GET', headers: { Authorization } }
+        {
+          method: 'GET',
+          headers: { Authorization: getAuthorization(getState) }
+        }
       )
       const json = await res.json()
       dispatch(

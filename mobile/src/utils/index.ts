@@ -1,5 +1,3 @@
-import base64 from 'base-64'
-
 import { ASSET, TickerPair } from './interfaces'
 
 export const configs = {
@@ -48,11 +46,11 @@ export const assetLabel = (asset: ASSET | null): string => {
   }
 }
 
-export const Authorization = `Basic ${base64.encode('')}`
-
-export const format = (price: string) => {
-  const pieces = parseFloat(price).toFixed(2).split('')
-  let ii = pieces.length - 3
+export const format = (price: string, float = true) => {
+  const pieces = parseFloat(price)
+    .toFixed(float ? 2 : 0)
+    .split('')
+  let ii = pieces.length - (float ? 3 : 0)
   while ((ii -= 3) > 0) pieces.splice(ii, 0, ' ')
 
   return pieces.join('')

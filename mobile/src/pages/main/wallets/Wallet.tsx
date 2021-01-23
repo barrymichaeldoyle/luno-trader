@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 
-const Main: FC = () => {
+const Wallet: FC = () => {
   return null
 }
 
-export default Main
+export default Wallet

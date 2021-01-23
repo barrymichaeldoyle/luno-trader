@@ -4,37 +4,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import Auth from './pages/auth'
-import Main from './pages/Main'
+import Main from './pages/main'
 import Splash from './pages/Splash'
-import { setAuth } from './reducer/auth'
+import { setAuth, useAuthValid } from './reducer/auth'
 import { fetchTickers } from './reducer/tickers'
 
-interface Ticker {
-  ask: string
-  bid: string
-  last_trade: string
-  pair: string
-  rolling_24_hour_volume: string
-  status: 'ACTIVE'
-  timestamp: string
-}
-
-interface Tickers {
-  XBTZAR?: Ticker
-  ETHZAR?: Ticker
-  LTCZAR?: Ticker
-  XRPZAR?: Ticker
-}
-
 const App: FC = () => {
+  const isValid = useAuthValid()
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true)
   const auth = useSelector(state => state.auth)
 
   const getData = useCallback(async () => {
+    setIsLoading(true)
     try {
-      const jsonValue = await AsyncStorage.getItem('auth')
-      if (jsonValue !== null) dispatch(setAuth(JSON.parse(jsonValue)))
+      const json = await AsyncStorage.getItem('auth')
+      if (json !== null) dispatch(setAuth(JSON.parse(json)))
     } catch (e) {
       console.error(e)
     } finally {
@@ -43,13 +28,17 @@ const App: FC = () => {
   }, [])
 
   useEffect(() => {
+    console.log('AUTH', auth)
+  }, [auth])
+
+  useEffect(() => {
     getData()
     dispatch(fetchTickers())
-  }, [dispatch])
+  }, [dispatch, getData])
 
   if (isLoading) return <Splash />
 
-  if (!auth.apiKey || !auth.apiSecret || !auth.write) return <Auth />
+  if (auth.isUpdating || !isValid) return <Auth />
 
   return <Main />
 }

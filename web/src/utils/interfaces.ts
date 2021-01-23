@@ -1,14 +1,5 @@
 export type ASSET = 'ZAR' | 'ETH' | 'XBT' | 'XRP' | 'LTC' | 'SAVINGS'
 
-export interface Wallet {
-  account_id: string
-  asset: string
-  balance: string
-  name: string
-  reserved: string
-  unconfirmed: string
-}
-
 export interface Order {
   base: string
   completed_timestamp: number
@@ -51,6 +42,15 @@ export interface Orders {
   ETHZAR?: Order
   LTCZAR?: Order
   XRPZAR?: Order
+}
+
+export interface Wallet {
+  account_id: string
+  asset: string
+  balance: string
+  name?: string
+  reserved: string
+  unconfirmed: string
 }
 
 export interface Wallets {

@@ -1,24 +1,29 @@
 import React, { FC, useCallback, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import { Button, Input } from '../../components'
+import { Button, Input, Row } from '../../components'
+import { setAuth, updateAuth } from '../../reducer/auth'
 
 const Credentials: FC = () => {
+  const dispatch = useDispatch()
   const [apiKey, setApiKey] = useState('')
   const [apiSecret, setApiSecret] = useState('')
-  const [isStoring, setIsStoring] = useState(false)
+  const [write, setWrite] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
+  const isUpdatingAuth = useSelector(({ auth }) => auth.isUpdating)
 
-  const [loading, setLoading] = useState(false)
-
-  const storeData = useCallback(async value => {
-    setIsStoring(true)
+  const handleSubmit = useCallback(async () => {
+    setIsSaving(true)
     try {
-      const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem('auth', jsonValue)
+      const auth = JSON.stringify({ apiKey, apiSecret, write })
+      await AsyncStorage.setItem('auth', auth)
+      dispatch(setAuth(auth))
     } catch (e) {
       console.error(e)
-      setIsStoring(false)
+    } finally {
+      setIsSaving(false)
     }
   }, [])
 
@@ -27,55 +32,34 @@ const Credentials: FC = () => {
       <Input
         defaultValue={apiKey}
         label="API Key"
-        onChangeText={setApiKey}
+        onChangeText={value => setApiKey(value)}
         paste
       />
       <Input
         defaultValue={apiSecret}
         label="API Secret"
-        onChangeText={setApiSecret}
+        onChangeText={value => setApiSecret(value)}
         paste
       />
-      <Button
-        accessibilityLabel="Submit Authentication Credentials"
-        label={loading ? 'Submitting' : 'Submit'}
-        loading={loading}
-        onPress={() => setLoading(!loading)}
-        width={156}
-      />
-      <Button
-        accessibilityLabel="Submit Authentication Credentials"
-        label="Submit"
-        loading={loading}
-        onPress={() => setLoading(!loading)}
-        outline
-      />
-      <Button
-        accessibilityLabel="Submit Authentication Credentials"
-        disabled
-        label="Submit"
-        onPress={() => console.log('Pushed the button')}
-      />
-      <Button
-        accessibilityLabel="Submit Authentication Credentials"
-        disabled
-        label="Submit"
-        onPress={() => console.log('Pushed the button')}
-        outline
-      />
-      <Button
-        accessibilityLabel="Submit Authentication Credentials"
-        loading
-        label="Submit"
-        onPress={() => console.log('Pushed the button')}
-      />
-      <Button
-        accessibilityLabel="Submit Authentication Credentials"
-        loading
-        label="Submit"
-        onPress={() => console.log('Pushed the button')}
-        outline
-      />
+      <Row>
+        {isUpdatingAuth && (
+          <Button
+            accessibilityLabel="Cancel Updating Authentication Credentials"
+            label="Cancel"
+            onPress={() => dispatch(updateAuth(false))}
+            outline
+            width={150}
+          />
+        )}
+        <Button
+          accessibilityLabel="Submit Authentication Credentials"
+          disabled={apiKey.trim().length === 0 || apiSecret.trim().length === 0}
+          label={isSaving ? 'Saving' : 'Save'}
+          loading={isSaving}
+          onPress={handleSubmit}
+          width={150}
+        />
+      </Row>
     </>
   )
 }

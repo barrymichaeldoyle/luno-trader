@@ -1,14 +1,5 @@
 export type ASSET = 'ZAR' | 'ETH' | 'XBT' | 'XRP' | 'LTC' | 'SAVINGS'
 
-export interface Wallet {
-  account_id: string
-  asset: string
-  balance: string
-  name: string
-  reserved: string
-  unconfirmed: string
-}
-
 export interface Order {
   base: string
   completed_timestamp: number
@@ -23,6 +14,13 @@ export interface Order {
   pair: string
   state: 'PENDING' | 'COMPLETE'
   type: 'ASK' | 'BID' | 'BUY' | 'SELL'
+}
+
+export interface Orders {
+  XBTZAR?: Order
+  ETHZAR?: Order
+  LTCZAR?: Order
+  XRPZAR?: Order
 }
 
 export type STATUS = 'IDLE' | 'LOADING' | 'SUCCEEDED' | 'FAILED'
@@ -46,11 +44,13 @@ export interface Tickers {
   XRPZAR?: Ticker
 }
 
-export interface Orders {
-  XBTZAR?: Order
-  ETHZAR?: Order
-  LTCZAR?: Order
-  XRPZAR?: Order
+export interface Wallet {
+  account_id: string
+  asset: string
+  balance: string
+  name?: string
+  reserved: string
+  unconfirmed: string
 }
 
 export interface Wallets {

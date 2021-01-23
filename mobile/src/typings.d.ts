@@ -1,9 +1,7 @@
-import store from './reducer/store'
+import { AppState } from './reducer/interfaces'
 import theme from './styles/theme'
 
 declare module 'react-redux' {
-  const state = store.getState()
-  type AppState = typeof state
   interface DefaultRootState extends AppState {}
 }
 
