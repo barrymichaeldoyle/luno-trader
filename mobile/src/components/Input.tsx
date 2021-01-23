@@ -12,6 +12,7 @@ const Container = styled.View`
 `
 
 const Label = styled.Text`
+  color: ${({ theme }) => theme.darkBlue};
   font-weight: bold;
   font-size: 20px;
   margin-bottom: 3px;

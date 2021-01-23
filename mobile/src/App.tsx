@@ -1,8 +1,9 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components/native'
 
-import Auth from './pages/Auth'
-import Splash from './pages/Splash'
+import Auth from './pages/auth'
+import { fetchTickers } from './reducer/tickers'
 
 interface Ticker {
   ask: string
@@ -33,18 +34,13 @@ const Desc = styled.Text`
 `
 
 const App: FC = () => {
-  const [tickers, setTickers] = useState<Tickers>({})
-  const [error, setError] = useState('')
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchTickers())
+  }, [dispatch])
 
   return <Auth />
-  if (true) return <Splash />
-
-  return (
-    <Container>
-      <Desc>R {tickers.XBTZAR?.ask}</Desc>
-      {error.length > 0 && <Desc>{error}</Desc>}
-    </Container>
-  )
 }
 
 export default App

@@ -1,8 +1,9 @@
 import React, { FC, useState } from 'react'
-import { Keyboard, Text, TextInput, TouchableWithoutFeedback } from 'react-native'
+import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components/native'
 
-import { Input } from '../components'
+import { Input } from '../../components'
+import Prices from './Prices'
 
 const Wrapper = styled.View`
   align-items: center;
@@ -39,6 +40,7 @@ const Auth: FC = () => {
       <Wrapper>
         <Title>Luno Trader</Title>
         <Container>
+          <Prices />
           <Input
             defaultValue={apiKey}
             label="API Key"
@@ -51,7 +53,6 @@ const Auth: FC = () => {
             onChangeText={setApiSecret}
             paste
           />
-          <TextInput />
         </Container>
       </Wrapper>
     </TouchableWithoutFeedback>
