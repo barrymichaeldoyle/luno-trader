@@ -8,28 +8,27 @@ interface CellProps {
 }
 
 export const Cell = styled.Text<CellProps>`
-  ${({
-    align = 'left',
-    bold = false,
-    color = 'black',
-    width = 100,
-    theme
-  }) => css`
+  ${({ align = 'left', bold = false, color = 'black', width, theme }) => css`
     color: ${theme[color]};
     font-size: 16px;
+    flex: 1;
     font-weight: ${bold ? 'bold' : 'normal'};
     height: 22px;
     text-align: ${align};
-    width: ${width}px;
+    ${width && `width: ${width}px;`}
   `}
 `
 
-export const Row = styled.View<{
-  justify?: 'flex-start' | 'center' | 'flex-end'
-}>`
-  justify-content: ${({ justify = 'center' }) => justify};
-  flex-direction: row;
-  width: 100%;
+interface RowProps {
+  justify?: 'flex-start' | 'center' | 'flex-end' | 'space-between'
+}
+
+export const Row = styled.View<RowProps>`
+  ${({ justify = 'center' }) => css`
+    flex-direction: row;
+    justify-content: ${justify};
+    width: 100%;
+  `}
 `
 
 export const Heading = styled.Text`

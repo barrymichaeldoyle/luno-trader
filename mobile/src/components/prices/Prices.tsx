@@ -2,8 +2,10 @@ import React, { FC, useEffect, useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useAuthValid } from '../../reducer/auth'
+import { Error } from '../'
+import { useAuthValid } from '../../reducer/config'
 import { fetchPendingOrders } from '../../reducer/pendingOrders'
+import { fetchTickers } from '../../reducer/tickers'
 import { TickerPair } from '../../utils'
 import { Cell, Heading, Row } from '../styles'
 import Price from './Price'
@@ -27,7 +29,7 @@ const Prices: FC = () => {
     <>
       <Heading>Buying Prices</Heading>
       {tickerStatus === 'FAILED' ? (
-        <Text>{tickerError} - WIP Add Retry Button</Text>
+        <Error message={tickerError} retry={() => dispatch(fetchTickers())} />
       ) : (
         <View style={{ marginBottom: 20, width: '100%' }}>
           <TouchableOpacity

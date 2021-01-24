@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import { Order, STATUS } from '../utils'
-import { getIsAuthValid } from './auth'
+import { getIsAuthValid } from './config'
 import { GetState } from './interfaces'
 import { getAuthorization } from './utils'
 

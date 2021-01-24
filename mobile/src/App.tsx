@@ -6,39 +6,37 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Auth from './pages/auth'
 import Main from './pages/main'
 import Splash from './pages/Splash'
-import { setAuth, useAuthValid } from './reducer/auth'
+import { setConfig, useAuthValid } from './reducer/config'
 import { fetchTickers } from './reducer/tickers'
 
 const App: FC = () => {
   const isValid = useAuthValid()
   const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = useState(true)
-  const auth = useSelector(state => state.auth)
+  const [isLoadingConfig, setIsLoadingConfig] = useState(true)
+  const config = useSelector(state => state.config)
 
-  const getData = useCallback(async () => {
-    setIsLoading(true)
+  const getAuthData = useCallback(async () => {
+    setIsLoadingConfig(true)
     try {
-      const json = await AsyncStorage.getItem('auth')
-      if (json !== null) dispatch(setAuth(JSON.parse(json)))
+      const configJson = await AsyncStorage.getItem('config')
+      if (configJson !== null) dispatch(setConfig(JSON.parse(configJson)))
     } catch (e) {
       console.error(e)
     } finally {
-      setIsLoading(false)
+      setIsLoadingConfig(false)
     }
   }, [])
 
   useEffect(() => {
-    console.log('AUTH', auth)
-  }, [auth])
-
-  useEffect(() => {
-    getData()
+    getAuthData()
     dispatch(fetchTickers())
-  }, [dispatch, getData])
+  }, [dispatch, getAuthData])
 
-  if (isLoading) return <Splash />
+  if (isLoadingConfig) return <Splash />
 
-  if (auth.isUpdating || !isValid) return <Auth />
+  console.log('CONFIG', config)
+
+  if (config.isUpdating || !isValid) return <Auth />
 
   return <Main />
 }

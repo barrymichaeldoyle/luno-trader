@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import { Order, STATUS } from '../utils'
-import { getIsAuthValid } from './auth'
+import { getIsAuthValid } from './config'
 import { GetState } from './interfaces'
 import { getAuthorization } from './utils'
 
@@ -37,8 +37,8 @@ export const slice = createSlice({
     }),
     setOrders: (state, { payload }) => ({
       ...state,
-      orders: { ...state.orders, ...payload },
       error: undefined,
+      orders: { ...state.orders, ...payload },
       status: 'SUCCEEDED'
     }),
     setStatus: (state, { payload }) => ({ ...state, status: payload })
@@ -52,7 +52,7 @@ export const fetchPendingOrders = () => async (
   getState: GetState
 ) => {
   const {
-    auth,
+    config,
     pendingOrders: { status }
   } = getState()
   if (getIsAuthValid(getState) && status !== 'LOADING') {
@@ -61,8 +61,8 @@ export const fetchPendingOrders = () => async (
       const res = await fetch(
         'https://api.luno.com/api/1/listorders?state=PENDING',
         {
-          method: 'GET',
-          headers: { Authorization: getAuthorization(getState) }
+          headers: { Authorization: getAuthorization(getState) },
+          method: 'GET'
         }
       )
       const json = await res.json()

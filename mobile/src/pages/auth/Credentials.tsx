@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { Button, Input, Row } from '../../components'
-import { setAuth, updateAuth } from '../../reducer/auth'
+import { setConfig, setIsUpdatingConfig, useSavingsId } from '../../reducer/config'
 
 const Credentials: FC = () => {
   const dispatch = useDispatch()
@@ -12,17 +12,22 @@ const Credentials: FC = () => {
   const [apiSecret, setApiSecret] = useState('')
   const [write, setWrite] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
-  const isUpdatingAuth = useSelector(({ auth }) => auth.isUpdating)
+  const isUpdatingConfig = useSelector(({ config }) => config.isUpdating)
+  const savingsId = useSavingsId()
 
-  const handleSubmit = useCallback(async () => {
+  const handleSave = useCallback(async () => {
     setIsSaving(true)
     try {
-      const auth = JSON.stringify({ apiKey, apiSecret, write })
-      await AsyncStorage.setItem('auth', auth)
-      dispatch(setAuth(auth))
+      const configJsonStr = JSON.stringify({
+        apiKey,
+        apiSecret,
+        savingsId,
+        write
+      })
+      await AsyncStorage.setItem('config', configJsonStr)
+      dispatch(setConfig({ apiKey, apiSecret, write }))
     } catch (e) {
       console.error(e)
-    } finally {
       setIsSaving(false)
     }
   }, [])
@@ -42,11 +47,11 @@ const Credentials: FC = () => {
         paste
       />
       <Row>
-        {isUpdatingAuth && (
+        {isUpdatingConfig && (
           <Button
             accessibilityLabel="Cancel Updating Authentication Credentials"
             label="Cancel"
-            onPress={() => dispatch(updateAuth(false))}
+            onPress={() => dispatch(setIsUpdatingConfig(false))}
             outline
             width={150}
           />
@@ -56,7 +61,7 @@ const Credentials: FC = () => {
           disabled={apiKey.trim().length === 0 || apiSecret.trim().length === 0}
           label={isSaving ? 'Saving' : 'Save'}
           loading={isSaving}
-          onPress={handleSubmit}
+          onPress={handleSave}
           width={150}
         />
       </Row>

@@ -1,7 +1,7 @@
 import React, { FC, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useAuthValid } from '../../reducer/auth'
+import { useAuthValid } from '../../reducer/config'
 import { format, pairLabel, TickerPair } from '../../utils'
 import { Cell, Row } from '../styles'
 

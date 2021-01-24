@@ -6,11 +6,11 @@ import Layout from '../../layout'
 import Credentials from './Credentials'
 
 const Auth: FC = () => {
-  const isUpdatingAuth = useSelector(({ auth }) => auth.isUpdating)
+  const isUpdatingConfig = useSelector(({ config }) => config.isUpdating)
 
   return (
     <Layout>
-      {isUpdatingAuth ? (
+      {isUpdatingConfig ? (
         <Heading style={{ marginBottom: 30 }}>Update API Key</Heading>
       ) : (
         <Prices />

@@ -22,6 +22,7 @@ export const slice = createSlice({
       error: payload,
       status: 'FAILED'
     }),
+    setStatus: (state, { payload }) => ({ ...state, status: payload }),
     setTickers: (state, { payload }) => ({
       ...state,
       tickers: payload,
@@ -31,9 +32,10 @@ export const slice = createSlice({
   }
 })
 
-export const { setTickers, setError } = slice.actions
+export const { setError, setStatus, setTickers } = slice.actions
 
 export const fetchTickers = () => async dispatch => {
+  setStatus('LOADING')
   try {
     const res = await fetch('https://api.luno.com/api/1/tickers', {
       method: 'GET'

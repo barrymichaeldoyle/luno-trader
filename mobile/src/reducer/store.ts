@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import auth from './auth'
 import completeOrders from './completeOrders'
 import config from './config'
 import pendingOrders from './pendingOrders'
@@ -10,9 +9,8 @@ import wallets from './wallets'
 
 const store = configureStore({
   reducer: {
-    auth,
-    completeOrders,
     config,
+    completeOrders,
     pendingOrders,
     selected,
     tickers,

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import { STATUS, Wallet, Wallets } from '../utils'
-import { getIsAuthValid } from './auth'
+import { getIsAuthValid } from './config'
 import { GetState } from './interfaces'
 import { getAuthorization } from './utils'
 
@@ -28,7 +28,8 @@ export const slice = createSlice({
     }),
     setSavingsChoices: (state, { payload }) => ({
       ...state,
-      savingsChoices: payload
+      savingsChoices: payload,
+      status: 'SUCCEEDED'
     }),
     setStatus: (state, { payload }) => ({ ...state, status: payload }),
     setWallets: (state, { payload }) => ({
