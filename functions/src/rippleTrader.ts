@@ -115,7 +115,7 @@ const fetchNewTrades = async (
     }
     return setTimeout(
       () => fetchNewTrades(orderId, newDoneStamps, startTime, spread),
-      60000
+      15000
     )
   } catch (e) {
     process.stderr.write(`Error Fetching Trades: ${e.message}`)
@@ -139,7 +139,10 @@ const main = async () => {
     const spreadInput = prompt({ sigint: true })(
       `Select Spread (Min / Default: 0.02) > `
     )
-    const spread = spreadInput.length === 0 ? 0.02 : Number(spreadInput)
+    const spread =
+      spreadInput.length === 0 || Number(spreadInput) < 0.02
+        ? 0.02
+        : Number(spreadInput)
     process.stdout.write(`Selected Spread: R${spread}\n\n`)
 
     if (id === 'all')
