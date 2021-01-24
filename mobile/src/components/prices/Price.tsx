@@ -44,7 +44,7 @@ const Price: FC<Props> = ({ pair, priceView }) => {
   return (
     <Row>
       <Cell width={80}>{pairLabel(pair as TickerPair)}</Cell>
-      <Cell align="right">
+      <Cell align="right" style={{ fontVariant: ['tabular-nums'] }}>
         R {format(tickerPair[priceView.toLowerCase()], pair === 'XRPZAR')}
       </Cell>
       {isValid && (
@@ -56,6 +56,8 @@ const Price: FC<Props> = ({ pair, priceView }) => {
               ? 'green'
               : 'red'
           }
+          style={{ fontVariant: ['tabular-nums'] }}
+          width={105}
         >
           {nearestOpenOrderPrice
             ? format(nearestOpenOrderPrice.toString(), pair === 'XRPZAR')

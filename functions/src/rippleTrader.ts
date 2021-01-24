@@ -41,7 +41,6 @@ const fetchPendingOrders = async (): Promise<Order[]> => {
 }
 
 const fetchOrder = async (id: string): Promise<Order | undefined> => {
-  process.stdout.write(`[${moment().format('HH:mm:ss')}] Fetching Order...`)
   try {
     const res = await fetch(`https://api.luno.com/api/1/orders/${id}`, {
       method: 'GET',
@@ -49,7 +48,10 @@ const fetchOrder = async (id: string): Promise<Order | undefined> => {
     })
     if (res.ok) {
       const json = await res.json()
-      process.stdout.write(`Order ${json}`)
+      if (json.state === 'COMPLETE') {
+        process.stdout.write(`ORDER ${id} COMPLETE -> END CYCLE`)
+        return undefined
+      }
       return json as Order | undefined
     }
     process.stdout.write(`ORDER ${id} COMPLETE`)
@@ -101,7 +103,7 @@ const fetchNewTrades = async (
           order_id === orderId && !doneStamps.includes(timestamp)
       ) as Trade[]) ?? []
     const newDoneStamps = [...doneStamps]
-    if (trades.length > 0) {
+    if (trades.length > 0)
       trades.forEach(({ price, timestamp, type, volume }: Trade) => {
         newDoneStamps.push(timestamp)
         const newOrderType = type === 'BID' ? 'ASK' : 'BID'
@@ -110,13 +112,12 @@ const fetchNewTrades = async (
         openNewOrder(newOrderType, newOrderPrice, volume, spread)
       })
 
-      const order = await fetchOrder(orderId)
-      if (!order) return
-    }
-    return setTimeout(
-      () => fetchNewTrades(orderId, newDoneStamps, startTime, spread),
-      15000
-    )
+    const order = await fetchOrder(orderId)
+    if (order)
+      setTimeout(
+        () => fetchNewTrades(orderId, newDoneStamps, startTime, spread),
+        15000
+      )
   } catch (e) {
     process.stderr.write(`Error Fetching Trades: ${e.message}`)
   }

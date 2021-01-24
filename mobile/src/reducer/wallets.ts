@@ -8,12 +8,13 @@ import { getAuthorization } from './utils'
 interface State {
   assets: Wallets
   error?: string
-  savingsChoices?: Wallet[]
+  btcWallets: Wallet[]
   status: STATUS
 }
 
 const initialState: State = {
   assets: {},
+  btcWallets: [],
   status: 'IDLE'
 }
 
@@ -21,15 +22,15 @@ export const slice = createSlice({
   name: 'wallets',
   initialState,
   reducers: {
+    setBtcWallets: (state, { payload }) => ({
+      ...state,
+      btcWallets: payload,
+      status: 'SUCCEEDED'
+    }),
     setError: (state, { payload }) => ({
       ...state,
       error: payload,
       status: 'FAILED'
-    }),
-    setSavingsChoices: (state, { payload }) => ({
-      ...state,
-      savingsChoices: payload,
-      status: 'SUCCEEDED'
     }),
     setStatus: (state, { payload }) => ({ ...state, status: payload }),
     setWallets: (state, { payload }) => ({
@@ -42,12 +43,7 @@ export const slice = createSlice({
   }
 })
 
-export const {
-  setError,
-  setSavingsChoices,
-  setStatus,
-  setWallets
-} = slice.actions
+export const { setBtcWallets, setError, setStatus, setWallets } = slice.actions
 
 export const fetchWallets = () => async (dispatch, getState: GetState) => {
   const {
@@ -63,17 +59,17 @@ export const fetchWallets = () => async (dispatch, getState: GetState) => {
       })
       const json = await res.json()
       const wallets: Wallets = {}
-      if (!savingsId) {
-        const savingsChoices = json.balance.filter(
-          ({ asset }: Wallet) => asset === 'XBT'
-        )
-        if (savingsChoices.length > 1)
-          return dispatch(setSavingsChoices(savingsChoices))
-      }
+      const btcWallets = json.balance.filter(
+        ({ asset }: Wallet) => asset === 'XBT'
+      )
+      dispatch(setBtcWallets(btcWallets))
+      if (btcWallets.length > 1 && !savingsId) return
       json.balance.forEach((wallet: Wallet) => {
         if (wallet.account_id === savingsId) wallets.SAVINGS = wallet
-        wallets[wallet.asset] = wallet
+        else wallets[wallet.asset] = wallet
       })
+      console.log('WALLETS', wallets)
+      console.log('SAVINGS ID', savingsId)
       dispatch(setWallets(wallets))
     } catch (err) {
       console.error({ err })

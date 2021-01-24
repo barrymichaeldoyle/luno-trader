@@ -30,7 +30,7 @@ export const configs = {
 export const assetLabel = (asset: ASSET | null): string => {
   switch (asset) {
     case 'SAVINGS':
-      return 'Savings (BTC)'
+      return 'Savings'
     case 'XBT':
       return 'Bitcoin'
     case 'LTC':

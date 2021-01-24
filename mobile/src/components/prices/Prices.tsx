@@ -2,11 +2,11 @@ import React, { FC, useEffect, useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Error } from '../'
 import { useAuthValid } from '../../reducer/config'
 import { fetchPendingOrders } from '../../reducer/pendingOrders'
 import { fetchTickers } from '../../reducer/tickers'
 import { TickerPair } from '../../utils'
+import Error from '../Error'
 import { Cell, Heading, Row } from '../styles'
 import Price from './Price'
 
@@ -35,7 +35,7 @@ const Prices: FC = () => {
           <TouchableOpacity
             onPress={() => setPriceView(priceView === 'Ask' ? 'Bid' : 'Ask')}
           >
-            <Row>
+            <Row style={{ marginBottom: 5 }}>
               <Cell bold width={80}>
                 Currency
               </Cell>
@@ -43,7 +43,7 @@ const Prices: FC = () => {
                 {priceView} Price
               </Cell>
               {isValid && (
-                <Cell align="right" bold>
+                <Cell align="right" bold width={105}>
                   Open Order
                 </Cell>
               )}

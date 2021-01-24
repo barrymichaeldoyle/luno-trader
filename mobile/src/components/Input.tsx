@@ -18,15 +18,17 @@ const Label = styled.Text<{ focused?: boolean }>`
   margin-bottom: 3px;
 `
 
-const IconContainer = styled.TouchableOpacity`
-  background-color: ${theme.blue};
-  border: solid 1px ${theme.darkBlue};
-  border-left-width: 0;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-  height: 40px;
-  width: 40px;
-  padding: 6px 6px 6px 5px;
+const IconContainer = styled.TouchableOpacity<{ focused?: boolean }>`
+  ${({ focused, theme }) => css`
+    background-color: ${theme.blue};
+    border: solid 1px ${focused ? theme.blue : theme.darkBlue};
+    border-left-width: 0;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    height: 40px;
+    width: 40px;
+    padding: 6px 6px 6px 5px;
+  `}
 `
 
 const InputContainer = styled.View`
@@ -80,7 +82,7 @@ const Input: FC<Props> = ({
           paste={paste}
         />
         {paste && (
-          <IconContainer onPress={handlePaste}>
+          <IconContainer focused={isFocused} onPress={handlePaste}>
             <MaterialIcons name="content-paste" size={28} color={theme.white} />
           </IconContainer>
         )}

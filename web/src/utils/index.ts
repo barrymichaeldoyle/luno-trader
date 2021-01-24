@@ -40,7 +40,7 @@ export const savingsId = REACT_APP_SAVINGS_ID
 export const assetLabel = (asset: ASSET | null): string => {
   switch (asset) {
     case 'SAVINGS':
-      return 'Savings (BTC)'
+      return 'BTC Savings'
     case 'XBT':
       return 'Bitcoin'
     case 'LTC':

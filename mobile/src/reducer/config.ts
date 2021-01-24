@@ -22,8 +22,8 @@ export const slice = createSlice({
   reducers: {
     setConfig: (state, { payload }) => ({
       ...state,
-      ...payload,
-      isUpdating: false
+      isUpdating: false,
+      ...payload
     }),
     setIsUpdatingConfig: (state, { payload }) => ({
       ...state,
