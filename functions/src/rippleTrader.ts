@@ -68,17 +68,19 @@ const openNewOrder = async (
   volume: string,
   spread: number
 ) => {
-  process.stdout.write('\nCreating New Order')
+  process.stdout.write('\nCreating New Order\n')
   const startTime = Math.round(new Date().getTime())
   try {
     const res = await fetch(
-      `https://api.luno.com/api/1/postorder?pair=XRPZAR&type=${type}&price=${price}&volume=${volume}`,
+      `https://api.luno.com/api/1/postorder?pair=XRPZAR&type=${type}&price=${price.toFixed(
+        2
+      )}&volume=${Math.round(Number(volume))}`,
       { method: 'POST', headers: { Authorization } }
     )
     const json = await res.json()
     fetchNewTrades(json.order_id, [], startTime, spread)
   } catch (e) {
-    process.stderr.write(`Error Creating New Order: ${e.message}`)
+    process.stderr.write(`\nError Creating New Order: ${e.message}\n`)
   }
 }
 
@@ -119,7 +121,7 @@ const fetchNewTrades = async (
         15000
       )
   } catch (e) {
-    process.stderr.write(`Error Fetching Trades: ${e.message}`)
+    process.stderr.write(`\nError Fetching Trades: ${e.message}\n`)
   }
 }
 
@@ -152,7 +154,7 @@ const main = async () => {
       )
     else fetchNewTrades(id.toString(), [], startTime, spread)
   } catch (e) {
-    process.stdout.write('Error Selecting Order')
+    process.stdout.write('\nError Selecting Order\n')
   }
 }
 
