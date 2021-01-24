@@ -91,7 +91,9 @@ const fetchNewTrades = async (
   spread = 0.02
 ): Promise<any> => {
   process.stdout.write(
-    `[${moment().format('HH:mm:ss')}] Fetching Order ${orderId} Trades...\n`
+    `[${moment().format(
+      'HH:mm:ss'
+    )}] Fetching Order ${orderId} Trades... ${startTime}\n`
   )
   try {
     const res = await fetch(
@@ -105,14 +107,14 @@ const fetchNewTrades = async (
           order_id === orderId && !doneStamps.includes(timestamp)
       ) as Trade[]) ?? []
     const newDoneStamps = [...doneStamps]
-    if (trades.length > 0)
-      trades.forEach(({ price, timestamp, type, volume }: Trade) => {
-        newDoneStamps.push(timestamp)
-        const newOrderType = type === 'BID' ? 'ASK' : 'BID'
-        const newOrderPrice =
-          type === 'BID' ? Number(price) + spread : Number(price) - spread
-        openNewOrder(newOrderType, newOrderPrice, volume, spread)
-      })
+    if (trades.length > 0) console.log('New Trades Found!', trades)
+    trades.forEach(({ price, timestamp, type, volume }: Trade) => {
+      newDoneStamps.push(timestamp)
+      const newOrderType = type === 'BID' ? 'ASK' : 'BID'
+      const newOrderPrice =
+        type === 'BID' ? Number(price) + spread : Number(price) - spread
+      openNewOrder(newOrderType, newOrderPrice, volume, spread)
+    })
 
     const order = await fetchOrder(orderId)
     if (order)
