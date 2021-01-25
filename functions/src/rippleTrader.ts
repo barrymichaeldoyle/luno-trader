@@ -130,7 +130,7 @@ const fetchNewTrades = async (
     if (order)
       setTimeout(
         () => fetchNewTrades(orderId, newDoneStamps, startTime, spread),
-        15000
+        10000
       )
   } catch (e) {
     process.stderr.write(`\nError Fetching Trades: ${e.message}\n`)
