@@ -52,7 +52,12 @@ const fetchOrder = async (id: string): Promise<Order | undefined> => {
     if (res.ok) {
       const json = await res.json()
       if (json.state === 'COMPLETE') {
-        process.stdout.write(`ORDER ${id} COMPLETE -> END CYCLE`)
+        process.stdout.write(
+          `${color(`ORDER ${id}`, 'yellow')} ${color(
+            'COMPLETE -> Stop Monitoring Trades',
+            'green'
+          )}\n`
+        )
         return undefined
       }
       return json as Order | undefined
@@ -71,7 +76,15 @@ const openNewOrder = async (
   volume: number,
   spread: number
 ) => {
-  process.stdout.write('\nCreating New Order\n')
+  process.stdout.write(
+    `\n${color(
+      `[${moment().format('HH:mm:ss')}]`,
+      'cyan'
+    )} Creating New Order -> ${color(type, 'green')} ${color(
+      volume.toString(),
+      'white'
+    )} ${color(`@ R${price}`, 'yellow')}\n`
+  )
   const startTime = Math.round(new Date().getTime())
   try {
     const res = await fetch(
@@ -111,8 +124,20 @@ const fetchNewTrades = async (
           order_id === orderId && !doneStamps.includes(timestamp)
       ) as Trade[]) ?? []
     const newDoneStamps = [...doneStamps]
-    if (trades.length > 0) console.log('New Trades Found!', trades)
+    if (trades.length > 0)
+      process.stdout.write(
+        `${color(
+          `[${moment().format('HH:mm:ss')}]`,
+          'cyan'
+        )} New Trades Found!\n\n`
+      )
     trades.forEach(({ price, timestamp, type, volume }: Trade) => {
+      process.stdout.write(
+        `${color('Trade: ', 'cyan')} ${color(type, 'green')} ${color(
+          volume,
+          'white'
+        )} ${color(`@ R${price}`, 'yellow')}`
+      )
       newDoneStamps.push(timestamp)
       const newOrderType = type === 'BID' ? 'ASK' : 'BID'
       const newOrderPrice =
