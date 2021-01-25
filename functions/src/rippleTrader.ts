@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import prompt from 'prompt-sync'
 
 import { Order, Trade } from './interfaces'
-import { Authorization } from './utils'
+import { Authorization, color } from './utils'
 
 interface Values {
   [x: string]: string
@@ -25,7 +25,10 @@ const getValues = (orders: Order[]) => {
 
 const fetchPendingOrders = async (): Promise<Order[]> => {
   process.stdout.write(
-    `[${moment().format('HH:mm:ss')}] Fetching Pending Orders...\n\n`
+    `${color(
+      `[${moment().format('HH:mm:ss')}]`,
+      'cyan'
+    )} Fetching Pending Orders...\n\n`
   )
   try {
     const res = await fetch(
@@ -65,7 +68,7 @@ const fetchOrder = async (id: string): Promise<Order | undefined> => {
 const openNewOrder = async (
   type: 'ASK' | 'BID',
   price: number,
-  volume: string,
+  volume: number,
   spread: number
 ) => {
   process.stdout.write('\nCreating New Order\n')
@@ -78,6 +81,12 @@ const openNewOrder = async (
       { method: 'POST', headers: { Authorization } }
     )
     const json = await res.json()
+    process.stdout.write(
+      `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} ${color(
+        'Started Monitoring Trades For',
+        'green'
+      )} ${color(`ORDER ${json.order_id.toString()}`, 'yellow')}\n`
+    )
     fetchNewTrades(json.order_id, [], startTime, spread)
   } catch (e) {
     process.stderr.write(`\nError Creating New Order: ${e.message}\n`)
@@ -90,11 +99,6 @@ const fetchNewTrades = async (
   startTime: number,
   spread = 0.02
 ): Promise<any> => {
-  process.stdout.write(
-    `[${moment().format(
-      'HH:mm:ss'
-    )}] Fetching Order ${orderId} Trades... ${startTime}\n`
-  )
   try {
     const res = await fetch(
       `https://api.luno.com/api/1/listtrades?pair=XRPZAR&since=${startTime}`,
@@ -113,7 +117,13 @@ const fetchNewTrades = async (
       const newOrderType = type === 'BID' ? 'ASK' : 'BID'
       const newOrderPrice =
         type === 'BID' ? Number(price) + spread : Number(price) - spread
-      openNewOrder(newOrderType, newOrderPrice, volume, spread)
+      const newOrderVolume =
+        type === 'BID'
+          ? Math.floor(Number(volume) * 0.999)
+          : Math.floor(
+              ((Number(volume) * Number(price)) / newOrderPrice) * 0.999
+            )
+      openNewOrder(newOrderType, newOrderPrice, newOrderVolume, spread)
     })
 
     const order = await fetchOrder(orderId)
@@ -151,10 +161,24 @@ const main = async () => {
     process.stdout.write(`Selected Spread: R${spread}\n\n`)
 
     if (id === 'all')
-      orders.forEach(({ order_id }: Order) =>
+      orders.forEach(({ order_id }: Order) => {
+        process.stdout.write(
+          `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} ${color(
+            'Started Monitoring Trades',
+            'green'
+          )} ${color(`ORDER ${order_id}`, 'yellow')}\n`
+        )
         fetchNewTrades(order_id, [], startTime, spread)
+      })
+    else {
+      process.stdout.write(
+        `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} ${color(
+          'Started Monitoring Trades For',
+          'green'
+        )} ${color(`ORDER ${id.toString()}`, 'yellow')}\n`
       )
-    else fetchNewTrades(id.toString(), [], startTime, spread)
+      fetchNewTrades(id.toString(), [], startTime, spread)
+    }
   } catch (e) {
     process.stdout.write('\nError Selecting Order\n')
   }
