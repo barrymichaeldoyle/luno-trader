@@ -53,10 +53,10 @@ const fetchOrder = async (id: string): Promise<Order | undefined> => {
       const json = await res.json()
       if (json.state === 'COMPLETE') {
         process.stdout.write(
-          `${color(`ORDER ${id}`, 'yellow')} ${color(
-            'COMPLETE -> Stop Monitoring Trades',
-            'green'
-          )}\n`
+          `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} ${color(
+            `ORDER ${id}`,
+            'yellow'
+          )} ${color('COMPLETE -> Stop Monitoring Trades', 'green')}\n`
         )
         return undefined
       }
