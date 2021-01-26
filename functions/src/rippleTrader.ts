@@ -83,7 +83,7 @@ const openNewOrder = async (
     )} Creating New Order -> ${color(type, 'green')} ${color(
       volume.toString(),
       'white'
-    )} ${color(`@ R${price}`, 'yellow')}\n`
+    )} ${color(`@ R${price.toFixed(2)}`, 'yellow')}\n`
   )
   const startTime = Math.round(new Date().getTime())
   try {
@@ -129,7 +129,7 @@ const fetchNewTrades = async (
         `${color(
           `[${moment().format('HH:mm:ss')}]`,
           'cyan'
-        )} New Trades Found!\n\n`
+        )} New Trades Found!\n`
       )
     trades.forEach(({ price, timestamp, type, volume }: Trade) => {
       process.stdout.write(
