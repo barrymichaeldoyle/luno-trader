@@ -72,7 +72,7 @@ const fetchOrder = async (id: string): Promise<Order | undefined> => {
 
 const openNewOrder = async (
   type: 'ASK' | 'BID',
-  price: number,
+  price: string,
   volume: number,
   spread: number
 ) => {
@@ -83,14 +83,14 @@ const openNewOrder = async (
     )} Creating New Order -> ${color(type, 'green')} ${color(
       volume.toString(),
       'white'
-    )} ${color(`@ R${price.toFixed(2)}`, 'yellow')}\n`
+    )} ${color(`@ R${price}`, 'yellow')}\n`
   )
   const startTime = Math.round(new Date().getTime())
   try {
     const res = await fetch(
-      `https://api.luno.com/api/1/postorder?pair=XRPZAR&type=${type}&price=${price.toFixed(
-        2
-      )}&volume=${Math.round(Number(volume))}`,
+      `https://api.luno.com/api/1/postorder?pair=XRPZAR&type=${type}&price=${price}&volume=${Math.round(
+        Number(volume)
+      )}`,
       { method: 'POST', headers: { Authorization } }
     )
     const json = await res.json()
@@ -124,32 +124,49 @@ const fetchNewTrades = async (
           order_id === orderId && !doneStamps.includes(timestamp)
       ) as Trade[]) ?? []
     const newDoneStamps = [...doneStamps]
-    if (trades.length > 0)
+    if (trades.length > 0) {
       process.stdout.write(
         `${color(
           `[${moment().format('HH:mm:ss')}]`,
           'cyan'
         )} New Trades Found!\n`
       )
-    trades.forEach(({ price, timestamp, type, volume }: Trade) => {
-      process.stdout.write(
-        `${color('Trade: ', 'cyan')} ${color(type, 'green')} ${color(
-          volume,
-          'white'
-        )} ${color(`@ R${price}`, 'yellow')}`
-      )
-      newDoneStamps.push(timestamp)
-      const newOrderType = type === 'BID' ? 'ASK' : 'BID'
-      const newOrderPrice =
-        type === 'BID' ? Number(price) + spread : Number(price) - spread
-      const newOrderVolume =
-        type === 'BID'
-          ? Math.floor(Number(volume) * 0.999)
-          : Math.floor(
-              ((Number(volume) * Number(price)) / newOrderPrice) * 0.999
+
+      interface TradeOrder {
+        [x: string]: number
+      }
+      const askOrders: TradeOrder = {}
+      const bidOrders: TradeOrder = {}
+
+      trades.forEach(({ price, timestamp, type, volume }: Trade) => {
+        process.stdout.write(
+          `${color('Trade: ', 'cyan')} ${color(type, 'green')} ${color(
+            volume,
+            'white'
+          )} ${color(`@ R${price}`, 'yellow')}`
+        )
+        newDoneStamps.push(timestamp)
+
+        if (type === 'BID') {
+          const newPrice = (Number(price) + spread).toFixed(2)
+          askOrders[newPrice] = askOrders[newPrice] + Math.floor(Number(volume))
+        } else {
+          const newPrice = (Number(price) - spread).toFixed(2)
+          bidOrders[newPrice] =
+            bidOrders[newPrice] +
+            Math.floor(
+              ((Number(volume) * Number(price)) / Number(newPrice)) * 0.999
             )
-      openNewOrder(newOrderType, newOrderPrice, newOrderVolume, spread)
-    })
+        }
+      })
+
+      Object.keys(askOrders).forEach(price =>
+        openNewOrder('ASK', price, askOrders[price], spread)
+      )
+      Object.keys(bidOrders).forEach(price =>
+        openNewOrder('BID', price, bidOrders[price], spread)
+      )
+    }
 
     const order = await fetchOrder(orderId)
     if (order)
