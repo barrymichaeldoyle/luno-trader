@@ -149,11 +149,12 @@ const fetchNewTrades = async (
 
         if (type === 'BID') {
           const newPrice = (Number(price) + spread).toFixed(2)
-          askOrders[newPrice] = askOrders[newPrice] + Math.floor(Number(volume))
+          askOrders[newPrice] =
+            Number(askOrders[newPrice]) + Math.floor(Number(volume))
         } else {
           const newPrice = (Number(price) - spread).toFixed(2)
           bidOrders[newPrice] =
-            bidOrders[newPrice] +
+            Number(bidOrders[newPrice]) +
             Math.floor(
               ((Number(volume) * Number(price)) / Number(newPrice)) * 0.999
             )
