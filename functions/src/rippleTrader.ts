@@ -141,7 +141,7 @@ const fetchNewTrades = async (
       trades.forEach(({ price, timestamp, type, volume }: Trade) => {
         process.stdout.write(
           `${color('Trade: ', 'cyan')} ${color(type, 'green')} ${color(
-            volume,
+            Number(volume).toFixed(0),
             'white'
           )} ${color(`@ R${price}`, 'yellow')}`
         )
@@ -149,11 +149,12 @@ const fetchNewTrades = async (
 
         if (type === 'BID') {
           const newPrice = (Number(price) + spread).toFixed(2)
-          askOrders[newPrice] = askOrders[newPrice] + Math.floor(Number(volume))
+          askOrders[newPrice] =
+            Number(askOrders[newPrice] ?? 0) + Math.floor(Number(volume))
         } else {
           const newPrice = (Number(price) - spread).toFixed(2)
           bidOrders[newPrice] =
-            bidOrders[newPrice] +
+            Number(bidOrders[newPrice] ?? 0) +
             Math.floor(
               ((Number(volume) * Number(price)) / Number(newPrice)) * 0.999
             )
