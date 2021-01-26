@@ -160,11 +160,13 @@ const fetchNewTrades = async (
         }
       })
 
-      Object.keys(askOrders).forEach(price =>
-        openNewOrder('ASK', price, askOrders[price], spread)
+      Object.keys(askOrders).forEach(
+        async price =>
+          await openNewOrder('ASK', price, askOrders[price], spread)
       )
-      Object.keys(bidOrders).forEach(price =>
-        openNewOrder('BID', price, bidOrders[price], spread)
+      Object.keys(bidOrders).forEach(
+        async price =>
+          await openNewOrder('BID', price, bidOrders[price], spread)
       )
     }
 
