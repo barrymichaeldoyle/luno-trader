@@ -141,7 +141,7 @@ const fetchNewTrades = async (
       trades.forEach(({ price, timestamp, type, volume }: Trade) => {
         process.stdout.write(
           `${color('Trade: ', 'cyan')} ${color(type, 'green')} ${color(
-            volume,
+            Number(volume).toFixed(0),
             'white'
           )} ${color(`@ R${price}`, 'yellow')}`
         )
