@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import { stderr } from 'process'
 import prompt from 'prompt-sync'
 
-import { fetchOrder, fetchPendingOrders } from '../api'
+import { fetchOrder, fetchPendingOrders, fetchTicker } from '../api'
 import { Order, Trade } from '../interfaces'
 import { Authorization, color, selected, unselected } from '../utils'
 
@@ -252,9 +252,19 @@ const main = async () => {
     color(`\nWelcome to Barry's Ripple Trading Bot:\n`, 'green')
   )
   while (run) {
-    const orders = await fetchPendingOrders('XRPZAR')
+    const [ticker, orders] = await Promise.all([
+      fetchTicker('XRPZAR'),
+      fetchPendingOrders('XRPZAR')
+    ])
+    if (ticker)
+      process.stdout.write(
+        `${color(`BID R ${Number(ticker.bid).toFixed(2)}`, 'green')}  ${color(
+          `ASK R ${Number(ticker.bid).toFixed(2)}`,
+          'red'
+        )}\n\n`
+      )
     if (orders.length) {
-      process.stdout.write(color(`Open Orders:\n============\n`, 'cyan'))
+      process.stdout.write(color(`Open Orders:\n===================\n`, 'cyan'))
 
       orders.forEach(({ type, limit_volume, limit_price }) =>
         process.stdout.write(
