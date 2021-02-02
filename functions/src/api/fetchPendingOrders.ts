@@ -2,7 +2,7 @@ import moment from 'moment'
 import fetch from 'node-fetch'
 
 import { Order, TickerPair } from '../interfaces'
-import { Authorization, color } from '../utils'
+import { Authorization, color, printError } from '../utils'
 
 const fetchPendingOrders = async (pair: TickerPair): Promise<Order[]> => {
   process.stdout.write(
@@ -17,11 +17,13 @@ const fetchPendingOrders = async (pair: TickerPair): Promise<Order[]> => {
       { method: 'GET', headers: { Authorization } }
     )
     const json = await res.json()
-    return (json.orders as Order[]).sort(
+    const { orders } = json
+    if (orders === null) return []
+    return (orders as Order[]).sort(
       (a, b) => Number(a.limit_price) - Number(b.limit_price)
     )
   } catch (e) {
-    process.stderr.write(`\nError Fetching Pending Orders: ${e.message}`)
+    printError('Failed to Fetch Pending Orders', e.message)
   }
   return []
 }

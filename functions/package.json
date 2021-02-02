@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "Functions to run Luno Trading",
   "main": "dist/index.js",
+  "bin": {
+    "ripple": "./bin/ripple"
+  },
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc"
+    "build": "rimraf dist && tsc && pkg ./dist/src/index.js"
   },
-  "bin": "src/index.ts",
   "pkg": {
     "assets": [
       "node_modules/**/*",
@@ -28,6 +30,7 @@
     "@types/prompt-sync": "^4.1.0",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3"
   },
@@ -38,5 +41,6 @@
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
     "prompt-sync": "^4.2.0"
-  }
+  },
+  "preferGlobal": true
 }

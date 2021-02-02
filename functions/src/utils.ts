@@ -8,6 +8,7 @@ const { API_KEY, API_SECRET, SAVINGS_ID } = process.env
 export const Authorization = `Basic ${base64.encode(
   `${API_KEY}:${API_SECRET}`
 )}`
+console.log(Authorization)
 export const savingsId = SAVINGS_ID
 
 type Color =
@@ -41,3 +42,8 @@ export const color = (str: string, colorName: Color = 'yellow') => {
 export const selected =
   color('[', 'cyan') + color('X', 'green') + color(']', 'cyan')
 export const unselected = color('[ ]', 'cyan')
+
+export const printError = (friendly: string, technical: string) =>
+  process.stdout.write(
+    `${color(`${friendly}: `, 'red')}${color(`${technical}`, 'yellow')}\n`
+  )

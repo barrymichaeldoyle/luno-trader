@@ -1,12 +1,17 @@
 import select from 'cli-select'
 import moment from 'moment'
 import fetch from 'node-fetch'
-import { stderr } from 'process'
 import prompt from 'prompt-sync'
 
 import { fetchOrder, fetchPendingOrders, fetchTicker } from '../api'
 import { Order, Trade } from '../interfaces'
-import { Authorization, color, selected, unselected } from '../utils'
+import {
+  Authorization,
+  color,
+  printError,
+  selected,
+  unselected
+} from '../utils'
 
 const bulkTask = async (taskType: 'CANCEL' | 'MERGE') => {
   const orders = await fetchPendingOrders('XRPZAR')
@@ -74,7 +79,7 @@ const bulkTask = async (taskType: 'CANCEL' | 'MERGE') => {
             )
           if (taskType === 'MERGE') volume = volume + Number(limit_volume)
         } catch (e) {
-          process.stderr.write(`Failed to Stop Order: ${e.message}`)
+          printError(`Failed to Stop Order ${order_id}`, e.message)
         }
       })
     )
@@ -98,7 +103,7 @@ const bulkTask = async (taskType: 'CANCEL' | 'MERGE') => {
         )} R ${price} ${color(volume.toString(), 'yellow')}`
       )
     } catch (e) {
-      process.stderr.write('Error Posting Order')
+      printError('Failed to Post New Order', e.message)
     }
   }
 }
@@ -135,7 +140,7 @@ const openNewOrder = async (
     )
     fetchNewTrades(json.order_id, [], startTime, spread)
   } catch (e) {
-    process.stderr.write(`\nError Creating New Order: ${e.message}\n`)
+    printError('Failed to Create New Order', e.message)
   }
 }
 
@@ -221,7 +226,7 @@ const fetchNewTrades = async (
       }
     }
   } catch (e) {
-    process.stderr.write(`\nError Fetching Trades: ${e.message}\n`)
+    printError('Failed to Fetch Trades', e.message)
   }
 }
 
@@ -259,7 +264,7 @@ const main = async () => {
     if (ticker)
       process.stdout.write(
         `${color(`BID R ${Number(ticker.bid).toFixed(2)}`, 'green')}  ${color(
-          `ASK R ${Number(ticker.bid).toFixed(2)}`,
+          `ASK R ${Number(ticker.ask).toFixed(2)}`,
           'red'
         )}\n\n`
       )
@@ -280,7 +285,7 @@ const main = async () => {
       )
     } else
       process.stdout.write(
-        color(`\nYou currently have no open orders\n`, 'magenta')
+        color(`You currently have no open orders\n`, 'magenta')
       )
 
     process.stdout.write(color('\nWhat would you like to do?:\n', 'yellow'))

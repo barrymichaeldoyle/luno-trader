@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 
 import { Order } from '../interfaces'
-import { Authorization } from '../utils'
+import { Authorization, printError } from '../utils'
 
 const fetchOrder = async (id: string): Promise<Order | undefined> => {
   try {
@@ -14,7 +14,7 @@ const fetchOrder = async (id: string): Promise<Order | undefined> => {
       return json as Order | undefined
     }
   } catch (e) {
-    process.stderr.write(`\nError Fetching Order: ${e.message}`)
+    printError(`Failed to Fetch Order ${id}`, e.message)
   }
   return undefined
 }

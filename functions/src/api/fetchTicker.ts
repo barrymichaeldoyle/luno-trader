@@ -2,7 +2,7 @@ import moment from 'moment'
 import fetch from 'node-fetch'
 
 import { Ticker, TickerPair } from '../interfaces'
-import { color } from '../utils'
+import { color, printError } from '../utils'
 
 const fetchTicker = async (pair: TickerPair): Promise<Ticker | undefined> => {
   process.stdout.write(
@@ -17,7 +17,7 @@ const fetchTicker = async (pair: TickerPair): Promise<Ticker | undefined> => {
     })
     return await res.json()
   } catch (e) {
-    process.stderr.write(`\nError Fetching Latest Ticker: ${e.message}`)
+    printError('Failed to Fetch Latest Ticker', e.message)
   }
   return undefined
 }
