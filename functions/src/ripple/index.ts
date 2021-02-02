@@ -264,7 +264,8 @@ const main = async () => {
         )}\n\n`
       )
     if (orders.length) {
-      process.stdout.write(color(`Open Orders:\n===================\n`, 'cyan'))
+      process.stdout.write(color(`Open Orders:`, 'cyan'))
+      process.stdout.write(color('\n======================\n', 'magenta'))
 
       orders.forEach(({ type, limit_volume, limit_price }) =>
         process.stdout.write(
