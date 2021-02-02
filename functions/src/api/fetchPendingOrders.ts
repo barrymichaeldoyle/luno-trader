@@ -17,7 +17,9 @@ const fetchPendingOrders = async (pair: TickerPair): Promise<Order[]> => {
       { method: 'GET', headers: { Authorization } }
     )
     const json = await res.json()
-    return json.orders as Order[]
+    return (json.orders as Order[]).sort(
+      (a, b) => Number(a.limit_price) - Number(b.limit_price)
+    )
   } catch (e) {
     process.stderr.write(`\nError Fetching Pending Orders: ${e.message}`)
   }

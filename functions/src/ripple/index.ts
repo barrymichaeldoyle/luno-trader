@@ -1,6 +1,7 @@
 import select from 'cli-select'
 import moment from 'moment'
 import fetch from 'node-fetch'
+import { stderr } from 'process'
 import prompt from 'prompt-sync'
 
 import { fetchOrder, fetchPendingOrders } from '../api'
@@ -32,6 +33,7 @@ const bulkTask = async (taskType: 'CANCEL' | 'MERGE') => {
   }
 
   const values: Values = {}
+  values.back = color('Back', 'yellow')
   Object.keys(orderGroups).forEach(
     group =>
       (values[group] = `R ${group}\t ${color(
@@ -41,7 +43,6 @@ const bulkTask = async (taskType: 'CANCEL' | 'MERGE') => {
         'cyan'
       )}`)
   )
-  values.cancel = 'Cancel'
 
   const { id } = await select({
     values,
@@ -51,37 +52,54 @@ const bulkTask = async (taskType: 'CANCEL' | 'MERGE') => {
 
   let volume = 0
 
-  await Promise.all(
-    orderGroups[id].map(async ({ order_id, limit_volume }) => {
-      try {
-        const res = await fetch(
-          `https://api.luno.com/api/1/stoporder?order_id=${order_id}`,
-          {
-            method: 'POST',
-            headers: { Authorization }
-          }
-        )
-        const json = await res.json()
-        if (json.success)
-          process.stdout.write(
-            `${color('Successfully Cancelled', 'green')} ${color(
-              `ORDER ${order_id}\n`,
-              'yellow'
-            )}`
+  if (id === 'back') return
+  else
+    await Promise.all(
+      orderGroups[id].map(async ({ order_id, limit_volume }) => {
+        try {
+          const res = await fetch(
+            `https://api.luno.com/api/1/stoporder?order_id=${order_id}`,
+            {
+              method: 'POST',
+              headers: { Authorization }
+            }
           )
-        if (taskType === 'MERGE') volume = volume + Number(limit_volume)
-      } catch (e) {
-        process.stderr.write(`Failed to Stop Order: ${e.message}`)
-      }
-    })
-  )
+          const json = await res.json()
+          if (json.success)
+            process.stdout.write(
+              `${color('Successfully Cancelled', 'green')} ${color(
+                `ORDER ${order_id}\n`,
+                'yellow'
+              )}`
+            )
+          if (taskType === 'MERGE') volume = volume + Number(limit_volume)
+        } catch (e) {
+          process.stderr.write(`Failed to Stop Order: ${e.message}`)
+        }
+      })
+    )
 
   if (taskType === 'MERGE') {
     const type = orderGroups[id][0].type
     const price = orderGroups[id][0].limit_price
-    const res = await fetch(
-      `https://api.luno.com/api/1/postorder?pair=XRPZAR&type=${type}&volume=${volume}&price=${price}`
-    )
+    try {
+      const res = await fetch(
+        `https://api.luno.com/api/1/postorder?pair=XRPZAR&type=${type}&volume=${volume}&price=${price}`,
+        { method: 'POST', headers: { Authorization } }
+      )
+      const json = await res.json()
+      process.stdout.write(
+        `${color(`Successfully Created New Order:`, 'green')} ${color(
+          json.order_id,
+          'yellow'
+        )} ${color(type, type === 'ASK' ? 'red' : 'green')} ${color(
+          '@',
+          'cyan'
+        )} R ${price} ${color(volume.toString(), 'yellow')}`
+      )
+    } catch (e) {
+      process.stderr.write('Error Posting Order')
+    }
   }
 }
 
@@ -194,7 +212,6 @@ const fetchNewTrades = async (
           10000
         )
       else {
-        process.stdout.write(`ORDER ${orderId} COMPLETE`)
         process.stdout.write(
           `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} ${color(
             `ORDER ${orderId}`,
@@ -214,6 +231,8 @@ interface Values {
 
 const getValues = (orders: Order[]) => {
   const values: Values = {}
+  values.back = color('Back', 'yellow')
+  values.all = color('All Orders', 'yellow')
   orders.forEach(
     ({ order_id, type, limit_volume, limit_price }) =>
       (values[order_id] = `${color(
@@ -224,7 +243,6 @@ const getValues = (orders: Order[]) => {
         'cyan'
       )} R ${limit_price}`)
   )
-  values.all = color('All Orders', 'yellow')
   return values
 }
 
@@ -234,13 +252,32 @@ const main = async () => {
     color(`\nWelcome to Barry's Ripple Trading Bot:\n`, 'green')
   )
   while (run) {
-    const startTime = Math.round(new Date().getTime())
+    const orders = await fetchPendingOrders('XRPZAR')
+    if (orders.length) {
+      process.stdout.write(color(`Open Orders:\n============\n`, 'cyan'))
+
+      orders.forEach(({ type, limit_volume, limit_price }) =>
+        process.stdout.write(
+          `${color(type, type === 'ASK' ? 'red' : 'green')} ${color(
+            '@',
+            'cyan'
+          )} R ${limit_price} ${color(
+            Number(limit_volume).toString(),
+            'yellow'
+          )}\n`
+        )
+      )
+    } else
+      process.stdout.write(
+        color(`\nYou currently have no open orders\n`, 'magenta')
+      )
+
     process.stdout.write(color('\nWhat would you like to do?:\n', 'yellow'))
 
     const { id: whatToDoOption } = await select({
       values: {
-        view: 'View Pending Orders',
-        hft: 'High Frequency Trading (HFT)',
+        hft: 'HFT (High Frequency Trading)',
+        bulkMerge: 'Bulk Merge Orders',
         bulkCancel: 'Bulk Cancel Orders',
         refresh: 'Refresh',
         exit: 'Exit'
@@ -250,19 +287,8 @@ const main = async () => {
     })
 
     switch (whatToDoOption) {
-      case 'view': {
-        const orders = await fetchPendingOrders('XRPZAR')
-        orders.forEach(({ type, limit_volume, limit_price }) =>
-          process.stdout.write(
-            `${color(type, type === 'ASK' ? 'red' : 'green')} ${color(
-              Number(limit_volume).toString(),
-              'yellow'
-            )}\t ${color('@', 'cyan')} R ${limit_price}\n`
-          )
-        )
-        continue
-      }
       case 'hft': {
+        const startTime = Math.round(new Date().getTime())
         const orders = await fetchPendingOrders('XRPZAR')
 
         const values = getValues(orders)
@@ -275,6 +301,7 @@ const main = async () => {
           selected,
           unselected
         })
+        if (id === 'back') continue
         process.stdout.write(`Selected ${values[id]}\n`)
         const spreadInput = prompt({ sigint: true })(
           `Select Spread (Min / Default: 0.03) > `
