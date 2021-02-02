@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import fetch from 'node-fetch'
 
 import { Ticker, Tickers } from './interfaces'
-import rippleTrader from './rippleTrader'
+import rippleTrader from './ripple'
 
 dotenv.config()
 

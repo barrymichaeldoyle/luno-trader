@@ -37,3 +37,7 @@ export const color = (str: string, colorName: Color = 'yellow') => {
   const stop = '\x1b[' + col[1] + 'm\x1b[0m'
   return start + str + stop
 }
+
+export const selected =
+  color('[', 'cyan') + color('X', 'green') + color(']', 'cyan')
+export const unselected = color('[ ]', 'cyan')
