@@ -9,7 +9,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "rimraf dist && tsc && pkg ./dist/src/index.js"
+    "build": "rimraf dist && tsc && pkg ./dist/src/index.js --target latest-macos-x64"
   },
   "pkg": {
     "assets": [
@@ -40,6 +40,7 @@
     "dotenv": "^8.2.0",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
+    "path": "^0.12.7",
     "prompt-sync": "^4.2.0"
   },
   "preferGlobal": true
