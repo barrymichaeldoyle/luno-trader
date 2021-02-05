@@ -140,10 +140,10 @@ const getValues = (orders: Order[]) => {
       (values[order_id] = `${color(
         type,
         type === 'ASK' ? 'red' : 'green'
-      )} ${color('@', 'cyan')} R ${limit_price} ${color(
-        Number(limit_volume).toString(),
-        'yellow'
-      )}`)
+      )} ${color('@', 'cyan')} R ${limit_price}\t${color(
+        '|',
+        'magenta'
+      )} ${color(Number(limit_volume).toString(), 'yellow')}`)
   )
   return values
 }
@@ -160,10 +160,10 @@ const main = async () => {
     ])
     if (ticker)
       process.stdout.write(
-        `${color(`BID R ${Number(ticker.bid).toFixed(2)}`, 'green')}  ${color(
-          `ASK R ${Number(ticker.ask).toFixed(2)}`,
-          'red'
-        )}\n\n`
+        `${color(`BID R ${Number(ticker.bid).toFixed(2)}`, 'green')} ${color(
+          '|',
+          'magenta'
+        )} ${color(`ASK R ${Number(ticker.ask).toFixed(2)}`, 'red')}\n\n`
       )
     if (orders.length) {
       process.stdout.write(color(`Open Orders:`, 'cyan'))
@@ -174,7 +174,7 @@ const main = async () => {
           `${color(type, type === 'ASK' ? 'red' : 'green')} ${color(
             '@',
             'cyan'
-          )} R ${limit_price} ${color(
+          )} R ${limit_price}\t${color('|', 'magenta')} ${color(
             Number(limit_volume).toString(),
             'yellow'
           )}\n`
