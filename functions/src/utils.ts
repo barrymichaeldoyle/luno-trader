@@ -5,7 +5,6 @@ const { API_KEY, API_SECRET, SAVINGS_ID } = process.env
 export const Authorization = `Basic ${base64.encode(
   `${API_KEY}:${API_SECRET}`
 )}`
-console.log(Authorization)
 export const savingsId = SAVINGS_ID
 
 type Color =

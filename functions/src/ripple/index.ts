@@ -5,7 +5,7 @@ import prompt from 'prompt-sync'
 
 import { fetchOrder, fetchPendingOrders, fetchTicker } from '../api'
 import postOrder from '../api/postOrder'
-import { bulkTask } from '../common'
+import { bulkTask, getAvailableFunds, getOrderSelectValues } from '../common'
 import { Order, Trade } from '../interfaces'
 import { Authorization, color, printError, selected, unselected } from '../utils'
 
@@ -127,37 +127,24 @@ const fetchNewTrades = async (
   }
 }
 
-interface Values {
-  [x: string]: string
-}
-
-const getValues = (orders: Order[]) => {
-  const values: Values = {}
-  values.back = color('Back', 'yellow')
-  values.all = color('All Orders', 'yellow')
-  orders.forEach(
-    ({ order_id, type, limit_volume, limit_price }) =>
-      (values[order_id] = `${color(
-        type,
-        type === 'ASK' ? 'red' : 'green'
-      )} ${color('@', 'cyan')} R ${limit_price}\t${color(
-        '|',
-        'magenta'
-      )} ${color(Number(limit_volume).toString(), 'yellow')}`)
-  )
-  return values
-}
-
 const main = async () => {
   let run = true
   process.stdout.write(
     color(`\nWelcome to Barry's Ripple Trading Bot:\n`, 'green')
   )
   while (run) {
-    const [ticker, orders] = await Promise.all([
+    const [{ XRP, ZAR }, ticker, orders] = await Promise.all([
+      getAvailableFunds(['XRP', 'ZAR']),
       fetchTicker('XRPZAR'),
       fetchPendingOrders('XRPZAR')
     ])
+    if (XRP && ZAR)
+      process.stdout.write(
+        `${color('Available', 'yellow')}:  ${color(
+          `R ${ZAR}`,
+          'green'
+        )} ${color(`|`, 'magenta')} ${color(`${XRP} Ripple`, 'green')}\n`
+      )
     if (ticker)
       process.stdout.write(
         `${color(`BID R ${Number(ticker.bid).toFixed(2)}`, 'green')} ${color(
@@ -204,7 +191,7 @@ const main = async () => {
         const startTime = Math.round(new Date().getTime())
         const orders = await fetchPendingOrders('XRPZAR')
 
-        const values = getValues(orders)
+        const values = getOrderSelectValues(orders)
 
         process.stdout.write(
           color('Please Select an Order to work with:\n', 'yellow')
