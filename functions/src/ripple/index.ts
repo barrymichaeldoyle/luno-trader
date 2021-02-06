@@ -30,21 +30,23 @@ const openNewOrder = async (
     return process.stdout.write(
       color(`NO NEW ORDER CREATED @ R${price} | ${volume}`, 'yellow')
     )
-  process.stdout.write(
-    `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} ${color(
-      'Started Monitoring Trades For',
-      'green'
-    )} ${color(`ORDER ${order_id.toString()}`, 'yellow')}\n`
-  )
-  fetchNewTrades(order_id, [], startTime, spread)
+  fetchNewTrades(order_id, [], startTime, spread, true)
 }
 
 const fetchNewTrades = async (
   orderId: string,
   doneStamps: number[],
   startTime: number,
-  spread = 0.03
+  spread = 0.03,
+  showMonitorMessage = false
 ): Promise<any> => {
+  if (showMonitorMessage)
+    process.stdout.write(
+      `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} ${color(
+        'Started Monitoring Trades For',
+        'green'
+      )} ${color(`ORDER ${orderId.toString()}`, 'yellow')}\n`
+    )
   try {
     const res = await fetch(
       `https://api.luno.com/api/1/listtrades?pair=XRPZAR&since=${startTime}`,
@@ -110,7 +112,8 @@ const fetchNewTrades = async (
     if (order) {
       if (order?.state !== 'COMPLETE')
         setTimeout(
-          () => fetchNewTrades(orderId, newDoneStamps, startTime, spread),
+          () =>
+            fetchNewTrades(orderId, newDoneStamps, startTime, spread, false),
           10000
         )
       else {
@@ -206,24 +209,11 @@ const main = async () => {
         process.stdout.write(`Selected Spread: R${spread}\n`)
 
         if (id === 'all')
-          orders.forEach(async ({ order_id }: Order) => {
-            process.stdout.write(
-              `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} ${color(
-                'Started Monitoring Trades',
-                'green'
-              )} ${color(`ORDER ${order_id}`, 'yellow')}\n`
-            )
-            fetchNewTrades(order_id, [], startTime, spread)
-          })
-        else {
-          process.stdout.write(
-            `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} ${color(
-              'Started Monitoring Trades For',
-              'green'
-            )} ${color(`ORDER ${id.toString()}`, 'yellow')}\n`
+          orders.forEach(async ({ order_id }: Order) =>
+            fetchNewTrades(order_id, [], startTime, spread, true)
           )
-          fetchNewTrades(id.toString(), [], startTime, spread)
-        }
+        else fetchNewTrades(id.toString(), [], startTime, spread, true)
+
         run = false
         continue
       }
