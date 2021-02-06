@@ -3,12 +3,13 @@ import moment from 'moment'
 import prompt from 'prompt-sync'
 
 import { fetchOrder, fetchPendingOrders, fetchTicker, fetchTrades, postOrder } from '../api'
-import { bulkTask, getAvailableFunds, getOrderSelectValues } from '../common'
+import { getAvailableFunds, getOrderSelectValues } from '../common'
 import { Order, Trade } from '../interfaces'
 import {
   color, printMonitoringEnd, printMonitoringStart, printOpenOrders, printTicker, printTrade,
   printWelcome, selectOptions
 } from '../logs'
+import { bulkTask } from '../tasks'
 
 const bundleOrderTradesAndCounterOrder = async (
   trades: Trade[],
