@@ -1,5 +1,5 @@
 import { Order } from '../interfaces'
-import { color } from '../utils'
+import { color } from '../logs'
 
 interface Values {
   [x: string]: string

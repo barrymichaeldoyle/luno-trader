@@ -3,11 +3,11 @@ import moment from 'moment'
 import fetch from 'node-fetch'
 import prompt from 'prompt-sync'
 
-import { fetchOrder, fetchPendingOrders, fetchTicker } from '../api'
+import { fetchOrder, fetchPendingOrders, fetchTicker, options } from '../api'
 import postOrder from '../api/postOrder'
 import { bulkTask, getAvailableFunds, getOrderSelectValues } from '../common'
 import { Order, Trade } from '../interfaces'
-import { Authorization, color, printError, selected, unselected } from '../utils'
+import { color, printError, printWelcome, selectOptions } from '../logs'
 
 const openNewOrder = async (
   type: 'ASK' | 'BID',
@@ -48,16 +48,16 @@ const fetchNewTrades = async (
   try {
     const res = await fetch(
       `https://api.luno.com/api/1/listtrades?pair=XRPZAR&since=${startTime}`,
-      { method: 'GET', headers: { Authorization } }
+      options('GET')
     )
-    const json = await res.json()
-    const trades =
-      (json.trades?.filter(
+    const { trades } = await res.json()
+    const filteredTrades =
+      (trades?.filter(
         ({ order_id, timestamp }: Trade) =>
           order_id === orderId && !doneStamps.includes(timestamp)
       ) as Trade[]) ?? []
     const newDoneStamps = [...doneStamps]
-    if (trades.length > 0) {
+    if (filteredTrades.length > 0) {
       process.stdout.write(
         `${color(
           `[${moment().format('HH:mm:ss')}]`,
@@ -129,9 +129,7 @@ const fetchNewTrades = async (
 
 const main = async () => {
   let run = true
-  process.stdout.write(
-    color(`\nWelcome to Barry's Ripple Trading Bot:\n`, 'green')
-  )
+  printWelcome()
   while (run) {
     const [{ XRP, ZAR }, ticker, orders] = await Promise.all([
       getAvailableFunds(['XRP', 'ZAR']),
@@ -182,8 +180,7 @@ const main = async () => {
         refresh: 'Refresh',
         exit: 'Exit'
       },
-      selected,
-      unselected
+      ...selectOptions
     })
 
     switch (whatToDoOption) {
@@ -196,11 +193,7 @@ const main = async () => {
         process.stdout.write(
           color('Please Select an Order to work with:\n', 'yellow')
         )
-        const { id } = await select({
-          values,
-          selected,
-          unselected
-        })
+        const { id } = await select({ values, ...selectOptions })
         if (id === 'back') continue
         process.stdout.write(`Selected ${values[id]}\n`)
         const spreadInput = prompt({ sigint: true })(

@@ -2,7 +2,7 @@ import moment from 'moment'
 import fetch from 'node-fetch'
 
 import { Ticker, TickerPair } from '../interfaces'
-import { color, printError } from '../utils'
+import { color, printError } from '../logs'
 
 const fetchTicker = async (pair: TickerPair): Promise<Ticker | undefined> => {
   process.stdout.write(

@@ -2,7 +2,8 @@ import moment from 'moment'
 import fetch from 'node-fetch'
 
 import { Order, TickerPair } from '../interfaces'
-import { Authorization, color, printError } from '../utils'
+import { color, printError } from '../logs'
+import options from './options'
 
 const fetchPendingOrders = async (pair: TickerPair): Promise<Order[]> => {
   process.stdout.write(
@@ -14,10 +15,9 @@ const fetchPendingOrders = async (pair: TickerPair): Promise<Order[]> => {
   try {
     const res = await fetch(
       `https://api.luno.com/api/1/listorders?state=PENDING&pair=${pair}`,
-      { method: 'GET', headers: { Authorization } }
+      options('GET')
     )
-    const json = await res.json()
-    const { error, orders } = json
+    const { error, orders } = await res.json()
     if (error) {
       printError('Failed to Fetch Pending Orders', error)
       return []

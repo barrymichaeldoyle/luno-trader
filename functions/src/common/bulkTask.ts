@@ -1,8 +1,8 @@
 import select from 'cli-select'
 
-import { fetchPendingOrders } from '../api'
+import { fetchPendingOrders, postOrder, stopOrder } from '../api'
 import { Order, TickerPair } from '../interfaces'
-import { Authorization, color, printError, selected, unselected } from '../utils'
+import { color, selectOptions } from '../logs'
 
 const bulkTask = async (taskType: 'CANCEL' | 'MERGE', pair: TickerPair) => {
   const orders = await fetchPendingOrders(pair)
@@ -40,11 +40,7 @@ const bulkTask = async (taskType: 'CANCEL' | 'MERGE', pair: TickerPair) => {
       )}`)
   )
 
-  const { id } = await select({
-    values,
-    selected,
-    unselected
-  })
+  const { id } = await select({ values, ...selectOptions })
 
   let volume = 0
 
@@ -52,50 +48,25 @@ const bulkTask = async (taskType: 'CANCEL' | 'MERGE', pair: TickerPair) => {
   else
     await Promise.all(
       orderGroups[id].map(async ({ order_id, limit_volume }) => {
-        try {
-          const res = await fetch(
-            `https://api.luno.com/api/1/stoporder?order_id=${order_id}`,
-            {
-              method: 'POST',
-              headers: { Authorization }
-            }
-          )
-          const json = await res.json()
-          if (json.success)
-            process.stdout.write(
-              `${color('Successfully Cancelled', 'green')} ${color(
-                `ORDER ${order_id}\n`,
-                'yellow'
-              )}`
-            )
-          if (taskType === 'MERGE') volume = volume + Number(limit_volume)
-        } catch (e) {
-          printError(`Failed to Stop Order ${order_id}`, e.message)
-        }
+        const success = await stopOrder(order_id)
+        if (success && taskType === 'MERGE') volume += Number(limit_volume)
       })
     )
 
   if (taskType === 'MERGE') {
     const type = orderGroups[id][0].type
     const price = orderGroups[id][0].limit_price
-    try {
-      const res = await fetch(
-        `https://api.luno.com/api/1/postorder?pair=${pair}&type=${type}&volume=${volume}&price=${price}`,
-        { method: 'POST', headers: { Authorization } }
-      )
-      const json = await res.json()
+    const orderId = await postOrder(pair, type, price, volume)
+    if (orderId)
       process.stdout.write(
-        `${color(`Successfully Created New Order:`, 'green')} ${color(
-          json.order_id,
+        `${color(`Successfully Created New Merged Order:`, 'green')} ${color(
+          orderId,
           'yellow'
         )} ${color(type, type === 'ASK' ? 'red' : 'green')} ${color(
           '@',
           'cyan'
         )} R ${price} ${color(volume.toString(), 'yellow')}`
       )
-    } catch (e) {
-      printError('Failed to Post New Order', e.message)
-    }
   }
 }
 
