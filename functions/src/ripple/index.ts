@@ -25,7 +25,9 @@ const bundleOrderTradesAndCounterOrder = async (
   const newDoneStamps = [...doneStamps]
   if (newTrades.length > 0) {
     process.stdout.write(
-      `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} New Trades Found!\n`
+      `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} New Trade${
+        newTrades.length === 1 ? '' : 's'
+      } Executed!\n`
     )
 
     interface TradeOrder {

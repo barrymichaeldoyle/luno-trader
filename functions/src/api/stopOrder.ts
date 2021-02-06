@@ -1,3 +1,5 @@
+import fetch from 'node-fetch'
+
 import { printCancelSuccess, printError } from '../logs'
 import options from './options'
 
