@@ -15,7 +15,8 @@ const fetchTicker = async (pair: TickerPair): Promise<Ticker | undefined> => {
     const res = await fetch(`https://api.luno.com/api/1/ticker?pair=${pair}`, {
       method: 'GET'
     })
-    return await res.json()
+    if (res.ok) return await res.json()
+    else console.log('FAILED TO FETCH TICKER', res)
   } catch (e) {
     printError('Failed to Fetch Latest Ticker', e.message)
   }

@@ -13,7 +13,7 @@ const fetchTrades = async (startTime: number): Promise<Trade[]> => {
     if (res.ok) {
       const { trades } = await res.json()
       return (trades as Trade[]) || []
-    }
+    } else console.log('FAILED TO FETCH TRADES', res)
   } catch (e) {
     printError('Failed to Fetch Trades', e.message)
   }

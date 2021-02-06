@@ -5,14 +5,14 @@ import color from './color'
 const printCreatingNewOrder = (
   type: 'ASK' | 'BID' | 'BUY' | 'SELL',
   price: string,
-  volume: number
+  volume: string
 ) =>
   process.stdout.write(
-    `\n${color(
+    `${color(
       `[${moment().format('HH:mm:ss')}]`,
       'cyan'
     )} Creating New Order -> ${color(type, 'green')} ${color(
-      volume.toString(),
+      volume,
       'white'
     )} ${color(`@ R${price}`, 'yellow')}\n`
   )

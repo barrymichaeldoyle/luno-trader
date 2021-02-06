@@ -56,7 +56,7 @@ const bulkTask = async (taskType: 'CANCEL' | 'MERGE', pair: TickerPair) => {
   if (taskType === 'MERGE') {
     const type = orderGroups[id][0].type
     const price = orderGroups[id][0].limit_price
-    const orderId = await postOrder(pair, type, price, volume)
+    const orderId = await postOrder(pair, type, price, volume.toString())
     if (orderId)
       process.stdout.write(
         `${color(`Successfully Created New Merged Order:`, 'green')} ${color(

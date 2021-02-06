@@ -6,8 +6,8 @@ import { fetchOrder, fetchPendingOrders, fetchTicker, fetchTrades, postOrder } f
 import { getAvailableFunds, getOrderSelectValues } from '../common'
 import { Order, Trade } from '../interfaces'
 import {
-  color, printMonitoringEnd, printMonitoringStart, printOpenOrders, printTicker, printTrade,
-  printWelcome, selectOptions
+  color, printAvailableBalances, printMonitoringEnd, printMonitoringStart, printOpenOrders,
+  printTicker, printTrade, printWelcome, selectOptions
 } from '../logs'
 import { bulkTask } from '../tasks'
 
@@ -55,10 +55,12 @@ const bundleOrderTradesAndCounterOrder = async (
     })
 
     Object.keys(askOrders).forEach(
-      async price => await openNewOrder('ASK', price, askOrders[price], spread)
+      async price =>
+        await openNewOrder('ASK', price, askOrders[price].toString(), spread)
     )
     Object.keys(bidOrders).forEach(
-      async price => await openNewOrder('BID', price, bidOrders[price], spread)
+      async price =>
+        await openNewOrder('BID', price, bidOrders[price].toString(), spread)
     )
   }
   return newDoneStamps
@@ -67,16 +69,16 @@ const bundleOrderTradesAndCounterOrder = async (
 const openNewOrder = async (
   type: 'ASK' | 'BID',
   price: string,
-  volume: number,
+  volume: string,
   spread: number
 ) => {
   const startTime = Math.round(new Date().getTime())
-  const order_id = await postOrder('XRPZAR', type, price, volume)
-  if (!order_id)
+  const orderId = await postOrder('XRPZAR', type, price, volume)
+  if (!orderId)
     return process.stdout.write(
-      color(`NO NEW ORDER CREATED @ R${price} | ${volume}`, 'yellow')
+      color(`NO NEW ORDER CREATED @ R${price} | ${volume}\n`, 'yellow')
     )
-  fetchNewTrades(order_id, [], startTime, spread, true)
+  fetchNewTrades(orderId, [], startTime, spread, true)
 }
 
 const fetchNewTrades = async (
@@ -114,18 +116,11 @@ const main = async () => {
       fetchTicker('XRPZAR'),
       fetchPendingOrders('XRPZAR')
     ])
-    if (XRP && ZAR)
-      process.stdout.write(
-        `${color('Available', 'yellow')}:  ${color(
-          `R ${ZAR}`,
-          'green'
-        )} ${color(`|`, 'magenta')} ${color(`${XRP} Ripple`, 'green')}\n`
-      )
+    printAvailableBalances(ZAR, XRP)
     printTicker(ticker)
     printOpenOrders(orders)
 
     process.stdout.write(color('\nWhat would you like to do?:\n', 'yellow'))
-
     const { id: whatToDoOption } = await select({
       values: {
         hft: 'HFT (High Frequency Trading)',

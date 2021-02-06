@@ -1,4 +1,5 @@
 export { default as color } from './color'
+export { default as printAvailableBalances } from './printAvailableBalances'
 export { default as printCancelSuccess } from './printCancelSuccess'
 export { default as printCreatingNewOrder } from './printCreatingNewOrder'
 export { default as printError } from './printError'

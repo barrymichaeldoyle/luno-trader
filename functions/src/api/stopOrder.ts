@@ -7,11 +7,13 @@ const stopOrder = async (orderId: string): Promise<boolean> => {
       `https://api.luno.com/api/1/stoporder?order_id=${orderId}`,
       options('POST')
     )
-    const { success } = await res.json()
-    if (success) {
-      printCancelSuccess(orderId)
-      return true
-    }
+    if (res.ok) {
+      const { success } = await res.json()
+      if (success) {
+        printCancelSuccess(orderId)
+        return true
+      }
+    } else console.log('FAILED TO STOP ORDER', res)
   } catch (e) {
     printError(`Failed to Stop Order ${orderId}`, e.message)
   }

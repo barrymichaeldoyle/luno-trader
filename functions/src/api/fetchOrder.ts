@@ -13,7 +13,7 @@ const fetchOrder = async (id: string): Promise<Order | undefined> => {
     if (res.ok) {
       const json = await res.json()
       return json as Order | undefined
-    }
+    } else console.log(res)
   } catch (e) {
     printError(`Failed to Fetch Order ${id}`, e.message)
   }
