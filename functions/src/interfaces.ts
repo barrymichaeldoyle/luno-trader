@@ -13,7 +13,7 @@ export interface Order {
   order_id: string
   pair: string
   state: 'PENDING' | 'COMPLETE'
-  type: 'ASK' | 'BID' | 'BUY' | 'SELL'
+  type: Type
 }
 
 export interface Orders {
@@ -21,21 +21,6 @@ export interface Orders {
   ETHZAR?: Order
   LTCZAR?: Order
   XRPZAR?: Order
-}
-
-export interface Trade {
-  base: string
-  counter: string
-  fee_base: string
-  fee_counter: string
-  is_buy: boolean
-  order_id: string
-  pair: string
-  price: string
-  sequence: number
-  timestamp: number
-  type: 'ASK' | 'BID'
-  volume: string
 }
 
 export interface Ticker {
@@ -56,6 +41,23 @@ export interface Tickers {
   LTCZAR?: Ticker
   XRPZAR?: Ticker
 }
+
+export interface Trade {
+  base: string
+  counter: string
+  fee_base: string
+  fee_counter: string
+  is_buy: boolean
+  order_id: string
+  pair: string
+  price: string
+  sequence: number
+  timestamp: number
+  type: 'ASK' | 'BID'
+  volume: string
+}
+
+export type Type = 'ASK' | 'BID' | 'BUY' | 'SELL'
 
 export interface Wallet {
   account_id: string
