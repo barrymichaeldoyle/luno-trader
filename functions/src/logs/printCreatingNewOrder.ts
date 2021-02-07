@@ -13,7 +13,7 @@ const printCreatingNewOrder = (type: Type, price: string, volume: string) =>
       type === 'ASK' || type === 'BUY' ? 'red' : 'green'
     )} ${color(`@ R${Number(price).toFixed(2)}`, 'white')} ${color(
       `${volume} XRP`,
-      'white'
+      'yellow'
     )}\n`
   )
 
