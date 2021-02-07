@@ -13,8 +13,8 @@ const colors = {
   blue: [34, 89],
   green: [32, 89],
   cyan: [36, 89],
-  red: [31, 89],
-  magenta: [35, 89],
+  red: [91, 89],
+  magenta: [95, 89],
   white: [37, 89],
   gray: [30, 89]
 }

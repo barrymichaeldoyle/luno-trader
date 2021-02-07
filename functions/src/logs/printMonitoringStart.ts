@@ -2,12 +2,12 @@ import moment from 'moment'
 
 import { color } from './'
 
-const printMonitoringStart = (orderId: string) =>
+const printMonitoringStart = () =>
   process.stdout.write(
     `${color(`[${moment().format('HH:mm:ss')}]`, 'cyan')} ${color(
-      'Started Monitoring Trades For',
+      'Started Monitoring Trades',
       'green'
-    )} ${color(`ORDER ${orderId.toString()}`, 'yellow')}\n`
+    )}\n`
   )
 
 export default printMonitoringStart

@@ -1,13 +1,16 @@
 import fetch from 'node-fetch'
 
-import { Trade } from '../interfaces'
+import { TickerPair, Trade } from '../interfaces'
 import { printError } from '../logs'
 import { options } from './'
 
-const fetchTrades = async (startTime: number): Promise<Trade[]> => {
+const fetchTrades = async (
+  startTime: number,
+  pair: TickerPair
+): Promise<Trade[]> => {
   try {
     const res = await fetch(
-      `https://api.luno.com/api/1/listtrades?pair=XRPZAR&since=${startTime}`,
+      `https://api.luno.com/api/1/listtrades?pair=${pair}&since=${startTime}`,
       options('GET')
     )
     if (res.ok) {
