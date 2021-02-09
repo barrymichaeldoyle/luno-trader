@@ -52,7 +52,12 @@ const makeNewTrades = async (
 
     Object.keys(askOrders).forEach(
       async price =>
-        await postOrder('XRPZAR', 'ASK', price, askOrders[price].toString())
+        await postOrder(
+          'XRPZAR',
+          'ASK',
+          price,
+          Math.floor(askOrders[price] * 0.999).toString()
+        )
     )
     Object.keys(bidOrders).forEach(
       async price =>
