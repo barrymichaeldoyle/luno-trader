@@ -8,7 +8,6 @@ export { default as printFetchingPendingOrders } from './printFetchingPendingOrd
 export { default as printMergeSuccess } from './printMergeSuccess'
 export { default as printMonitoringEnd } from './printMonitoringEnd'
 export { default as printMonitoringStart } from './printMonitoringStart'
-export { default as printNewTradesExecuted } from './printNewTradesExecuted'
 export { default as printOpenOrders } from './printOpenOrders'
 export { default as printSelectedSpread } from './printSelectedSpread'
 export { default as printTicker } from './printTicker'

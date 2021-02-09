@@ -10,14 +10,6 @@ import {
 } from '../logs'
 import { bulkTask } from '../tasks'
 
-const openNewOrder = async (
-  type: 'ASK' | 'BID',
-  price: string,
-  volume: string
-) => {
-  const orderId = await postOrder('XRPZAR', type, price, volume)
-}
-
 const makeNewTrades = async (
   trades: Trade[],
   spread: number,
@@ -53,9 +45,7 @@ const makeNewTrades = async (
         )
         bidOrders[newPrice] = Math.round(
           Number(bidOrders[newPrice] || 0) +
-            Math.floor(
-              ((Number(volume) * Number(price)) / Number(newPrice)) * 0.999
-            )
+            Math.floor((Number(volume) * Number(price)) / Number(newPrice))
         )
       }
     })
