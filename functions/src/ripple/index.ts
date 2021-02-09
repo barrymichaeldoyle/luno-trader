@@ -84,7 +84,7 @@ const monitorTrades = async (
   const newDoneStamps = await makeNewTrades(trades, spread, doneStamps)
   setTimeout(
     async () => monitorTrades(startTime, spread, newDoneStamps, false),
-    10000
+    3000
   )
 }
 

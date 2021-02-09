@@ -1,3 +1,4 @@
 Fail messages encountered (useful for better error handling later):
 
 reason: connect ETIMEDOUT
+failed, reason: read ECONNRESET
