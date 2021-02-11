@@ -1,14 +1,14 @@
 import select from 'cli-select'
 import prompt from 'prompt-sync'
 
-import { fetchPendingOrders, fetchTicker, fetchTrades, postOrder } from '../api'
-import { getAvailableFunds } from '../common'
-import { Trade } from '../interfaces'
+import { fetchPendingOrders, fetchTicker, fetchTrades, postOrder } from './api'
+import { getAvailableFunds } from './common'
+import { Trade } from './interfaces'
 import {
   color, printAvailableBalances, printMonitoringStart, printOpenOrders, printSelectedSpread,
   printTicker, printTrade, printTradesExecuted, printWelcome, selectOptions
-} from '../logs'
-import { bulkTask } from '../tasks'
+} from './logs'
+import { bulkTask } from './tasks'
 
 const makeNewTrades = async (
   trades: Trade[],
