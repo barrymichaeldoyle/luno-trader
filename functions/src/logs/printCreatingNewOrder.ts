@@ -1,9 +1,14 @@
 import moment from 'moment'
 
-import { Type } from '../interfaces'
+import { ASSET, Type } from '../interfaces'
 import color from './color'
 
-const printCreatingNewOrder = (type: Type, price: string, volume: string) =>
+const printCreatingNewOrder = (
+  type: Type,
+  price: string,
+  volume: string,
+  asset: ASSET
+) =>
   process.stdout.write(
     `${color(
       `[${moment().format('HH:mm:ss')}]`,
@@ -12,7 +17,7 @@ const printCreatingNewOrder = (type: Type, price: string, volume: string) =>
       type,
       type === 'ASK' || type === 'BUY' ? 'red' : 'green'
     )} ${color(`@ R${Number(price).toFixed(2)}`, 'white')} ${color(
-      `${volume} XRP`,
+      `${volume} ${asset}`,
       'yellow'
     )}\n`
   )

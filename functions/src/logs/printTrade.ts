@@ -1,15 +1,21 @@
-import { Type } from '../interfaces'
+import { getUnitPrecision } from '../common'
+import { TickerPair, Type } from '../interfaces'
 import { color } from './'
 
-const printTrade = (type: Type, price: string, volume: string) =>
+const printTrade = (
+  pair: TickerPair,
+  type: Type,
+  price: string,
+  volume: string
+) =>
   process.stdout.write(
-    `${color('Trade: ', 'cyan')} ${color(
+    `${color(`Trade ${pair}: `, 'cyan')} ${color(
       type === 'ASK' ? 'SOLD' : 'BOUGHT',
       type === 'ASK' ? 'red' : 'green'
-    )} ${color(Number(volume).toFixed(0), 'white')} ${color(
-      `@ R${price}`,
-      'yellow'
-    )}\n`
+    )} ${color(
+      Number(volume).toFixed(getUnitPrecision(pair)),
+      'white'
+    )} ${color(`@ R${price}`, 'yellow')}\n`
   )
 
 export default printTrade

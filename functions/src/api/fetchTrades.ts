@@ -5,12 +5,14 @@ import { printError } from '../logs'
 import { options } from './'
 
 const fetchTrades = async (
-  startTime: number,
-  pair: TickerPair
+  pair: TickerPair,
+  startTime?: number
 ): Promise<Trade[]> => {
   try {
     const res = await fetch(
-      `https://api.luno.com/api/1/listtrades?pair=${pair}&since=${startTime}`,
+      `https://api.luno.com/api/1/listtrades?pair=${pair}${
+        startTime ? `&since=${startTime}` : ''
+      }`,
       options('GET')
     )
     if (res.ok) {

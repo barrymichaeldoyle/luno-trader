@@ -2,10 +2,10 @@ const path = require('path')
 require('dotenv').config({
   path: path.join(__dirname, '../.env')
 })
-import rippleTrader from './ripple'
+import allTrader from './all'
 
 const main = () => {
-  rippleTrader()
+  allTrader()
 }
 
 main()
