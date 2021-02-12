@@ -2,6 +2,7 @@ import fetch from 'node-fetch'
 
 import { ASSET, TickerPair } from '../interfaces'
 import { color, printCreatingNewOrder, printError } from '../logs'
+import handleError from './handleError'
 import options from './options'
 
 const postOrder = async (
@@ -19,7 +20,7 @@ const postOrder = async (
     if (res.ok) {
       const { order_id } = await res.json()
       return order_id as string
-    } else console.log('FAILED TO POST ORDER', res)
+    } else handleError('FAILED TO POST ORDER', res)
   } catch (e) {
     printError(
       `Failed to Create New Order -> ${pair} ${type} @ R${price} | ${volume}`,

@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 
 import { printCancelSuccess, printError } from '../logs'
+import handleError from './handleError'
 import options from './options'
 
 const stopOrder = async (orderId: string): Promise<boolean> => {
@@ -15,7 +16,7 @@ const stopOrder = async (orderId: string): Promise<boolean> => {
         printCancelSuccess(orderId)
         return true
       }
-    } else console.log('FAILED TO STOP ORDER', res)
+    } else handleError('FAILED TO STOP ORDER', res)
   } catch (e) {
     printError(`Failed to Stop Order ${orderId}`, e.message)
   }

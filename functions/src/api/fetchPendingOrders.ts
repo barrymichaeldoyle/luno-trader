@@ -3,6 +3,7 @@ import fetch from 'node-fetch'
 
 import { Order, TickerPair } from '../interfaces'
 import { color, printError } from '../logs'
+import handleError from './handleError'
 import options from './options'
 
 const fetchPendingOrders = async (pair: TickerPair): Promise<Order[]> => {
@@ -27,7 +28,7 @@ const fetchPendingOrders = async (pair: TickerPair): Promise<Order[]> => {
       return (orders as Order[]).sort(
         (a, b) => Number(a.limit_price) - Number(b.limit_price)
       )
-    } else console.log('FAILED TO FETCH PENDING ORDERS', res)
+    } else handleError('FAILED TO FETCH PENDING ORDERS', res)
   } catch (e) {
     printError('Failed to Fetch Pending Orders', e.message)
   }

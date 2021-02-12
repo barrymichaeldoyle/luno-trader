@@ -3,6 +3,7 @@ import fetch from 'node-fetch'
 
 import { Ticker, TickerPair } from '../interfaces'
 import { color, printError } from '../logs'
+import handleError from './handleError'
 
 const fetchTicker = async (pair: TickerPair): Promise<Ticker | undefined> => {
   process.stdout.write(
@@ -16,7 +17,7 @@ const fetchTicker = async (pair: TickerPair): Promise<Ticker | undefined> => {
       method: 'GET'
     })
     if (res.ok) return await res.json()
-    else console.log('FAILED TO FETCH TICKER', res)
+    else handleError('FAILED TO FETCH TICKER', res)
   } catch (e) {
     printError('Failed to Fetch Latest Ticker', e.message)
   }

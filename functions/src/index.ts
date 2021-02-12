@@ -9,3 +9,5 @@ const main = () => {
 }
 
 main()
+
+// res.status, res.url, res.statusText

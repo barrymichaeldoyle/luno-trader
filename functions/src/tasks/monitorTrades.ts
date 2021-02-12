@@ -69,7 +69,7 @@ const makeNewTrades = async (
 const monitorTrades = async (
   pair: TickerPair,
   startTime: number,
-  spread = 1,
+  spread: number,
   doneStamps: number[],
   showMonitorMessage = false
 ) => {

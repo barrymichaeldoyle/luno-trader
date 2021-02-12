@@ -2,7 +2,8 @@ import fetch from 'node-fetch'
 
 import { TickerPair, Trade } from '../interfaces'
 import { printError } from '../logs'
-import { options } from './'
+import handleError from './handleError'
+import options from './options'
 
 const fetchTrades = async (
   pair: TickerPair,
@@ -18,7 +19,7 @@ const fetchTrades = async (
     if (res.ok) {
       const { trades } = await res.json()
       return (trades as Trade[]) || []
-    } else console.log('FAILED TO FETCH TRADES', res)
+    } else handleError('FAILED TO FETCH TRADES', res)
   } catch (e) {
     printError('Failed to Fetch Trades', e.message)
   }
