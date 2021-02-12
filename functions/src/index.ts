@@ -5,13 +5,14 @@ require('dotenv').config({
 
 import prompt from 'prompt-sync'
 
-import { color, printSelectedSpread, printWelcome } from './logs'
+import { printSelectedSpread, printWelcome } from './logs'
 import { monitorTrades as monitorLunoTrades } from './luno/tasks'
 import { monitorTrades as monitorValrTrades } from './valr/tasks'
 
-const main = () => {
+const main = async () => {
   if (!process.env.LUNO_API_KEY && !process.env.VAL_API_KEY)
-    return process.stdout.write(color('NOT API KEY FOUND', 'yellow'))
+    // return process.stdout.write(color('NOT API KEY FOUND', 'yellow'))
+    return console.error('NO API KEY FOUND!')
 
   printWelcome()
 
