@@ -14,8 +14,8 @@ const printCreatingNewOrder = (
       `[${moment().format('HH:mm:ss')}]`,
       'cyan'
     )} Creating New Order -> ${color(
-      side,
-      side === 'buy' ? 'red' : 'green'
+      side.toUpperCase(),
+      side === 'sell' ? 'red' : 'green'
     )} ${color(`@ R${Number(price).toFixed(2)}`, 'white')} ${color(
       `${quantity} ${asset}`,
       'yellow'
