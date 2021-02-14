@@ -3,18 +3,10 @@ import { roundPriceToPair, roundUnitsToPair } from '../common'
 import { PAIR, Trade } from '../interfaces'
 import { printMonitoringStart, printTrade, printTradesExecuted } from '../logs'
 
-const makeNewTrades = async (
-  trades: Trade[],
-  pair: PAIR,
-  spread: number,
-  doneStamps: number[]
-) => {
-  const newTrades = trades.filter(
-    ({ timestamp }) => !doneStamps.includes(timestamp)
-  )
-  const newDoneStamps = [...doneStamps]
-  if (newTrades.length > 0) {
-    printTradesExecuted(newTrades)
+const makeNewTrades = async (trades: Trade[], pair: PAIR, spread: number) => {
+  let latestStamp = 0
+  if (trades.length > 0) {
+    printTradesExecuted(trades)
 
     interface TradeOrder {
       [x: string]: number
@@ -22,9 +14,10 @@ const makeNewTrades = async (
     const askOrders: TradeOrder = {}
     const bidOrders: TradeOrder = {}
 
-    newTrades.forEach(({ price, timestamp, type, volume }) => {
+    trades.forEach(({ price, timestamp, type, volume }) => {
+      if (Number(timestamp) > latestStamp) latestStamp = Number(timestamp)
+
       printTrade(pair, type, price, volume)
-      newDoneStamps.push(timestamp)
 
       if (type === 'BID') {
         const newRawPrice = Number(price) * (1 + spread / 100)
@@ -63,23 +56,19 @@ const makeNewTrades = async (
     )
   }
 
-  return newDoneStamps
+  return latestStamp
 }
 
 const monitorTrades = async (
   pair: PAIR,
-  startTime: number,
+  since: number,
   spread: number,
-  doneStamps: number[],
   showMonitorMessage = false
 ) => {
   if (showMonitorMessage) printMonitoringStart(pair)
-  const trades = await fetchTrades(pair, startTime)
-  const newDoneStamps = await makeNewTrades(trades, pair, spread, doneStamps)
-  setTimeout(
-    async () => monitorTrades(pair, startTime, spread, newDoneStamps, false),
-    5000
-  )
+  const trades = await fetchTrades(pair, since)
+  const latestStamp = await makeNewTrades(trades, pair, spread)
+  setTimeout(async () => monitorTrades(pair, latestStamp, spread, false), 5000)
 }
 
 export default monitorTrades

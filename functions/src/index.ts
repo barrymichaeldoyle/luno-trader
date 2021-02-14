@@ -21,10 +21,10 @@ const main = async () => {
   const spread = await getSpread()
 
   if (process.env.LUNO_API_KEY) {
-    monitorLunoTrades('XRPZAR', startTime, spread, [], true)
-    monitorLunoTrades('XBTZAR', startTime, spread, [], true)
-    monitorLunoTrades('ETHZAR', startTime, spread, [], true)
-    monitorLunoTrades('LTCZAR', startTime, spread, [], true)
+    monitorLunoTrades('XRPZAR', startTime, spread, true)
+    monitorLunoTrades('XBTZAR', startTime, spread, true)
+    monitorLunoTrades('ETHZAR', startTime, spread, true)
+    monitorLunoTrades('LTCZAR', startTime, spread, true)
   }
   if (process.env.VALR_API_KEY) monitorValrTrades(spread, true)
 }
