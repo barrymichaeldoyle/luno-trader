@@ -36,7 +36,8 @@ const makeNewTrades = async (trades: Trade[], pair: PAIR, spread: number) => {
             roundUnitsToPair(
               pair,
               (Number(volume) * Number(price)) / Number(newPrice)
-            )
+            ),
+          'DOWN'
         )
       }
     })
