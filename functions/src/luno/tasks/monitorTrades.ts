@@ -35,9 +35,9 @@ const makeNewTrades = async (trades: Trade[], pair: PAIR, spread: number) => {
           Number(bidOrders[newPrice] || 0) +
             roundUnitsToPair(
               pair,
-              (Number(volume) * Number(price)) / Number(newPrice)
-            ),
-          'DOWN'
+              (Number(volume) * Number(price)) / Number(newPrice),
+              'DOWN'
+            )
         )
       }
     })
@@ -70,10 +70,10 @@ const monitorTrades = async (
   const trades = await fetchTrades(pair, since)
   const latestStamp = await makeNewTrades(trades, pair, spread)
   setTimeout(
-    async () =>
+    () =>
       monitorTrades(
         pair,
-        latestStamp === 0 ? since : latestStamp,
+        latestStamp === 0 ? since : latestStamp + 1,
         spread,
         false
       ),
