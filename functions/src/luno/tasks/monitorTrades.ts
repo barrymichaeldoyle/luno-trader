@@ -68,7 +68,16 @@ const monitorTrades = async (
   if (showMonitorMessage) printMonitoringStart(pair)
   const trades = await fetchTrades(pair, since)
   const latestStamp = await makeNewTrades(trades, pair, spread)
-  setTimeout(async () => monitorTrades(pair, latestStamp, spread, false), 5000)
+  setTimeout(
+    async () =>
+      monitorTrades(
+        pair,
+        latestStamp === 0 ? since : latestStamp,
+        spread,
+        false
+      ),
+    5000
+  )
 }
 
 export default monitorTrades
