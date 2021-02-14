@@ -10,7 +10,7 @@ const printTrade = (pair: PAIR, type: TYPE, price: string, volume: string) =>
     )} ${color(
       Number(volume).toFixed(getUnitPrecision(pair)),
       'white'
-    )} ${color(`@ R${Number(price).toFixed()}`, 'yellow')}\n`
+    )} ${color(`@ R${Number(price).toFixed(2)}`, 'yellow')}\n`
   )
 
 export default printTrade
