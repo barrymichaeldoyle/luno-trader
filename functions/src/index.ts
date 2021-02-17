@@ -3,15 +3,14 @@ require('dotenv').config({
   path: path.join(__dirname, '../.env')
 })
 
-import prompt from 'prompt-sync'
-import { getSpread } from './constants'
-
-import { printSelectedSpread, printWelcome } from './logs'
+import { getReinvestSellingGains, getSpread } from './constants'
+import { printWelcome } from './logs'
 import { monitorTrades as monitorLunoTrades } from './luno/tasks'
 import { monitorTrades as monitorValrTrades } from './valr/tasks'
 
 const main = async () => {
   if (!process.env.LUNO_API_KEY && !process.env.VAL_API_KEY)
+    // TODO: figure out a way to print this before exiting app
     // return process.stdout.write(color('NOT API KEY FOUND', 'yellow'))
     return console.error('NO API KEY FOUND!')
 
@@ -19,6 +18,7 @@ const main = async () => {
 
   const startTime = Math.round(new Date().getTime())
   const spread = await getSpread()
+  const reinvestSellingGains = await getReinvestSellingGains()
 
   if (process.env.LUNO_API_KEY) {
     monitorLunoTrades('XRPZAR', startTime, spread, true)
