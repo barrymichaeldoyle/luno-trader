@@ -52,9 +52,10 @@ const monitorTrades = async (
 
   ws.on('error', err => {
     console.log('ERROR', err.toString())
+    setTimeout(() => monitorTrades(spread, reinvestSellingGains, false), 30000)
   })
 
-  ws.on('close', () => monitorTrades(spread, false))
+  ws.on('close', () => monitorTrades(spread, reinvestSellingGains, false))
 }
 
 export default monitorTrades
