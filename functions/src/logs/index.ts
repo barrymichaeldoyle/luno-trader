@@ -1,5 +1,7 @@
 export { default as color } from './color'
 export { default as handleError } from './handleError'
 export { default as printError } from './printError'
+export { default as printSelectedReinvestSellingGains } from './printSelectedReinvestSellingGains'
 export { default as printSelectedSpread } from './printSelectedSpread'
 export { default as printWelcome } from './printWelcome'
+export { default as selectOptions } from './selectOptions'

@@ -1,12 +1,10 @@
 import select from 'cli-select'
 import prompt from 'prompt-sync'
 
+import { color, printSelectedSpread, printWelcome, selectOptions } from '../logs'
 import { fetchPendingOrders, fetchTicker } from './api'
 import { getAvailableFunds } from './common'
-import {
-  color, printAvailableBalances, printOpenOrders, printSelectedSpread, printTicker, printWelcome,
-  selectOptions
-} from './logs'
+import { printAvailableBalances, printOpenOrders, printTicker } from './logs'
 import { bulkTask, monitorTrades } from './tasks'
 
 const main = async () => {
@@ -49,7 +47,7 @@ const main = async () => {
 
         printSelectedSpread(spread)
 
-        monitorTrades('XRPZAR', startTime, spread, [], true)
+        monitorTrades('XRPZAR', startTime, spread, true)
         run = false
         continue
       }

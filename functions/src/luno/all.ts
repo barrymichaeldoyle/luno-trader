@@ -18,10 +18,10 @@ const main = async () => {
 
   printSelectedSpread(spread)
 
-  monitorTrades('XRPZAR', startTime, spread, [], true)
-  monitorTrades('XBTZAR', startTime, spread, [], true)
-  monitorTrades('ETHZAR', startTime, spread, [], true)
-  monitorTrades('LTCZAR', startTime, spread, [], true)
+  monitorTrades('XRPZAR', startTime, spread, true)
+  monitorTrades('XBTZAR', startTime, spread, true)
+  monitorTrades('ETHZAR', startTime, spread, true)
+  monitorTrades('LTCZAR', startTime, spread, true)
 }
 
 export default main
