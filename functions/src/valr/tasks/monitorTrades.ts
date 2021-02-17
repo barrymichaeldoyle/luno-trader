@@ -5,7 +5,11 @@ import { roundPriceToPair, roundUnitsToPair } from '../common'
 import { NewAccountTrade } from '../interfaces'
 import { printMonitoringStart, printTrade } from '../logs'
 
-const monitorTrades = async (spread: number, showMonitorMessage = false) => {
+const monitorTrades = async (
+  spread: number,
+  reinvestSellingGains: boolean,
+  showMonitorMessage = false
+) => {
   if (showMonitorMessage) printMonitoringStart()
 
   const headers = getAuthHeaders('/ws/account')
@@ -36,7 +40,9 @@ const monitorTrades = async (spread: number, showMonitorMessage = false) => {
         const newPrice = roundPriceToPair(currencyPair, newRawPrice, 'DOWN')
         const newQuantity = roundUnitsToPair(
           currencyPair,
-          Number(quantity) * 0.998,
+          (reinvestSellingGains
+            ? (Number(quantity) * Number(price)) / Number(newPrice)
+            : Number(quantity)) * 0.998,
           'DOWN'
         ).toString()
         postOrder(currencyPair, 'buy', newPrice.toString(), newQuantity)

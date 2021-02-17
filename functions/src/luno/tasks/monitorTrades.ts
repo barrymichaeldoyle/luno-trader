@@ -3,7 +3,12 @@ import { roundPriceToPair, roundUnitsToPair } from '../common'
 import { PAIR, Trade } from '../interfaces'
 import { printMonitoringStart, printTrade, printTradesExecuted } from '../logs'
 
-const makeNewTrades = async (trades: Trade[], pair: PAIR, spread: number) => {
+const makeNewTrades = async (
+  trades: Trade[],
+  pair: PAIR,
+  spread: number,
+  reinvestSellingGains: boolean
+) => {
   let latestStamp = 0
   if (trades.length > 0) {
     printTradesExecuted(trades)
@@ -35,7 +40,9 @@ const makeNewTrades = async (trades: Trade[], pair: PAIR, spread: number) => {
           Number(bidOrders[newPrice] || 0) +
             roundUnitsToPair(
               pair,
-              (Number(volume) * Number(price)) / Number(newPrice),
+              reinvestSellingGains
+                ? (Number(volume) * Number(price)) / Number(newPrice)
+                : Number(volume),
               'DOWN'
             )
         )
@@ -64,17 +71,24 @@ const monitorTrades = async (
   pair: PAIR,
   since: number,
   spread: number,
+  reinvestSellingGains: boolean,
   showMonitorMessage = false
 ) => {
   if (showMonitorMessage) printMonitoringStart(pair)
   const trades = await fetchTrades(pair, since)
-  const latestStamp = await makeNewTrades(trades, pair, spread)
+  const latestStamp = await makeNewTrades(
+    trades,
+    pair,
+    spread,
+    reinvestSellingGains
+  )
   setTimeout(
     () =>
       monitorTrades(
         pair,
         latestStamp === 0 ? since : latestStamp + 1,
         spread,
+        reinvestSellingGains,
         false
       ),
     5000

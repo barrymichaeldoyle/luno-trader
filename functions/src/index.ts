@@ -21,12 +21,13 @@ const main = async () => {
   const reinvestSellingGains = await getReinvestSellingGains()
 
   if (process.env.LUNO_API_KEY) {
-    monitorLunoTrades('XRPZAR', startTime, spread, true)
-    monitorLunoTrades('XBTZAR', startTime, spread, true)
-    monitorLunoTrades('ETHZAR', startTime, spread, true)
-    monitorLunoTrades('LTCZAR', startTime, spread, true)
+    monitorLunoTrades('XRPZAR', startTime, spread, reinvestSellingGains, true)
+    monitorLunoTrades('XBTZAR', startTime, spread, reinvestSellingGains, true)
+    monitorLunoTrades('ETHZAR', startTime, spread, reinvestSellingGains, true)
+    monitorLunoTrades('LTCZAR', startTime, spread, reinvestSellingGains, true)
   }
-  if (process.env.VALR_API_KEY) monitorValrTrades(spread, true)
+  if (process.env.VALR_API_KEY)
+    monitorValrTrades(spread, reinvestSellingGains, true)
 }
 
 main()

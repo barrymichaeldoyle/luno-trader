@@ -16,7 +16,8 @@ const getReinvestSellingGains = async () => {
     reinvest = yesOrNo === 'yes'
   } else reinvest = Boolean(envReinvestSellingGains)
 
-  printSelectedReinvestSellingGains
+  printSelectedReinvestSellingGains(reinvest)
+  return reinvest
 }
 
 export default getReinvestSellingGains
