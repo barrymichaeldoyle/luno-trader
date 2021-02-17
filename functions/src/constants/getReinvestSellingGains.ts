@@ -5,7 +5,8 @@ import { color, printSelectedReinvestSellingGains, selectOptions } from '../logs
 const getReinvestSellingGains = async () => {
   const envReinvestSellingGains = process.env.REINVEST_SELLING_GAINS
   let reinvest = true
-  if (!envReinvestSellingGains) {
+  console.log()
+  if (envReinvestSellingGains === undefined) {
     process.stdout.write(
       color('\nWould you like to reinvest your selling gains?:\n', 'yellow')
     )
@@ -14,7 +15,7 @@ const getReinvestSellingGains = async () => {
       ...selectOptions
     })
     reinvest = yesOrNo === 'yes'
-  } else reinvest = Boolean(envReinvestSellingGains)
+  } else reinvest = envReinvestSellingGains === 'true'
 
   printSelectedReinvestSellingGains(reinvest)
   return reinvest
