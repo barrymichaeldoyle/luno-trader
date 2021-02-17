@@ -1,9 +1,9 @@
 import select from 'cli-select'
 
-import { color } from '../../logs'
+import { color, selectOptions } from '../../logs'
 import { fetchPendingOrders, postOrder, stopOrder } from '../api'
 import { Order, PAIR } from '../interfaces'
-import { printMergeSuccess, selectOptions } from '../logs'
+import { printMergeSuccess } from '../logs'
 
 const bulkTask = async (taskType: 'CANCEL' | 'MERGE', pair: PAIR) => {
   const orders = await fetchPendingOrders(pair)
