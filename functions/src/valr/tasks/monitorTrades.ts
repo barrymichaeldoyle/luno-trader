@@ -33,8 +33,17 @@ const monitorTrades = async (
       if (side === 'buy') {
         const newRawPrice = Number(price) * (1 + spread / 100)
         const newPrice = roundPriceToPair(currencyPair, newRawPrice, 'UP')
-        const newQuantity = quantity
-        postOrder(currencyPair, 'sell', newPrice.toString(), newQuantity)
+        const newQuantity = roundUnitsToPair(
+          currencyPair,
+          Number(quantity) * 0.998,
+          'DOWN'
+        )
+        postOrder(
+          currencyPair,
+          'sell',
+          newPrice.toString(),
+          newQuantity.toString()
+        )
       } else if (side === 'sell') {
         const newRawPrice = Number(price) * (1 - spread / 100)
         const newPrice = roundPriceToPair(currencyPair, newRawPrice, 'DOWN')
