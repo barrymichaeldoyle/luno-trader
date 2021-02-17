@@ -51,7 +51,7 @@ const monitorTrades = async (
   })
 
   ws.on('error', err => {
-    console.log('ERROR', JSON.parse(err.toString()))
+    console.log('ERROR', err.toString())
   })
 
   ws.on('close', () => monitorTrades(spread, false))
