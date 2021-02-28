@@ -28,7 +28,13 @@ const postOrder = async (
     )
   }
   process.stdout.write(
-    color(`NO NEW ORDER CREATED @ R${price} | ${volume}\n`, 'yellow')
+    color(
+      `NO NEW ORDER CREATED: ${volume} ${pair.substring(
+        0,
+        3
+      )} @ ${price} ${pair.substring(3)} | ${volume}\n`,
+      'yellow'
+    )
   )
   return undefined
 }
