@@ -1,13 +1,13 @@
 import moment from 'moment'
 
 import { color } from '../../logs'
-import { ASSET, TYPE } from '../interfaces'
+import { PAIR, TYPE } from '../interfaces'
 
 const printCreatingNewOrder = (
   type: TYPE,
   price: string,
   volume: string,
-  asset: ASSET
+  pair: PAIR
 ) =>
   process.stdout.write(
     `${color(
@@ -16,9 +16,9 @@ const printCreatingNewOrder = (
     )} Creating New Order -> ${color(
       type,
       type === 'ASK' || type === 'BUY' ? 'red' : 'green'
-    )} ${color(`@ R${Number(price).toFixed(2)}`, 'white')} ${color(
-      `${volume} ${asset}`,
-      'yellow'
+    )} ${color(`${volume} ${pair.substring(0, 3)}`, 'yellow')} ${color(
+      `@ ${Number(price)} ${pair.substring(3)}`,
+      'white'
     )}\n`
   )
 

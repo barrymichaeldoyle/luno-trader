@@ -49,15 +49,11 @@ const makeNewTrades = async (
       }
     })
 
-    Object.keys(askOrders).forEach(
-      async price =>
-        await postOrder(
-          pair,
-          'ASK',
-          price,
-          roundUnitsToPair(pair, askOrders[price] * 0.999, 'DOWN').toString()
-        )
-    )
+    Object.keys(askOrders).forEach(async price => {
+      const newVolume = roundUnitsToPair(pair, askOrders[price] * 0.999, 'DOWN')
+      if (newVolume > 0)
+        await postOrder(pair, 'ASK', price, newVolume.toString())
+    })
     Object.keys(bidOrders).forEach(
       async price =>
         await postOrder(pair, 'BID', price, bidOrders[price].toString())

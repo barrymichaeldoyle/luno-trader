@@ -33,7 +33,13 @@ export interface Ticker {
   timestamp: string
 }
 
-export type PAIR = 'XBTZAR' | 'ETHZAR' | 'LTCZAR' | 'XRPZAR'
+export type PAIR =
+  | 'XBTZAR'
+  | 'ETHZAR'
+  | 'LTCZAR'
+  | 'XRPZAR'
+  | 'LTCXBT'
+  | 'XRPXBT'
 
 export interface Tickers {
   XBTZAR?: Ticker

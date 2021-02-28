@@ -3,7 +3,10 @@ import { PAIR } from '../interfaces'
 export const getUnitPrecision = (pair: PAIR) => {
   switch (pair) {
     case 'XRPZAR':
+    case 'XRPXBT':
       return 0
+    case 'LTCXBT':
+      return 2
     case 'LTCZAR':
       return 4
     case 'ETHZAR':

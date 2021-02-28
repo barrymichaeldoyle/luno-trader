@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 
 import { color, handleError, printError } from '../../logs'
-import { ASSET, PAIR, TYPE } from '../interfaces'
+import { PAIR, TYPE } from '../interfaces'
 import { printCreatingNewOrder } from '../logs'
 import options from './options'
 
@@ -11,7 +11,7 @@ const postOrder = async (
   price: string,
   volume: string
 ): Promise<string | undefined> => {
-  printCreatingNewOrder(type, price, volume, pair.substring(0, 3) as ASSET)
+  printCreatingNewOrder(type, price, volume, pair)
   try {
     const res = await fetch(
       `https://api.luno.com/api/1/postorder?pair=${pair}&type=${type}&price=${price}&volume=${volume}`,
