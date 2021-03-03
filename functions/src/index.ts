@@ -26,6 +26,7 @@ const main = async () => {
     // monitorLunoTrades('ETHZAR', startTime, spread, reinvestSellingGains, true)
     // monitorLunoTrades('LTCZAR', startTime, spread, reinvestSellingGains, true)
     monitorLunoTrades('LTCXBT', startTime, spread, reinvestSellingGains, true)
+    monitorLunoTrades('ETHXBT', startTime, spread, reinvestSellingGains, true)
     monitorLunoTrades('XRPXBT', startTime, spread, reinvestSellingGains, true)
   }
   if (process.env.VALR_API_KEY)

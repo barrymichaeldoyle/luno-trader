@@ -39,6 +39,7 @@ export type PAIR =
   | 'LTCZAR'
   | 'XRPZAR'
   | 'LTCXBT'
+  | 'ETHXBT'
   | 'XRPXBT'
 
 export interface Tickers {

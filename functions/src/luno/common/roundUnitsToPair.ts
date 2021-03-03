@@ -6,6 +6,7 @@ export const getUnitPrecision = (pair: PAIR) => {
     case 'XRPXBT':
       return 0
     case 'LTCXBT':
+    case 'ETHXBT':
       return 2
     case 'LTCZAR':
       return 4

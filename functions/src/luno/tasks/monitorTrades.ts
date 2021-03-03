@@ -50,7 +50,8 @@ const makeNewTrades = async (
     })
 
     Object.keys(askOrders).forEach(async price => {
-      const newVolume = roundUnitsToPair(pair, askOrders[price] * 0.999, 'DOWN')
+      // const newVolume = roundUnitsToPair(pair, askOrders[price] * 0.999, 'DOWN')
+      const newVolume = roundUnitsToPair(pair, askOrders[price] * 0.999)
       if (newVolume > 0)
         await postOrder(pair, 'ASK', price, newVolume.toString())
     })

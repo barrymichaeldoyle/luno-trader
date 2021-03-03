@@ -4,6 +4,7 @@ export const getPricePrecision = (pair: PAIR) => {
   switch (pair) {
     case 'XRPXBT':
       return 8
+    case 'ETHXBT':
     case 'LTCXBT':
       return 6
     case 'XRPZAR':
